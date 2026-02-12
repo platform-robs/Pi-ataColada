@@ -1646,7 +1646,7 @@ NOTA:
    1) CONFIGURACIÓN (EDITA SOLO ESTO)
    ========================================================== */
 
-const APPS_SCRIPT_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxHcJoVVjN9oV6YOhkUGFweSwWDUZznIGgWUD7n0ZqUgMjFFLOe_d5UQ2GAfBNH-RXE/exec";
+const APPS_SCRIPT_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbz96sHgkrokXKph3cPaOsMHeQHmUodxEKK0UhYRPZ6ccZ15mQsDklaAyu37RGqLAyVd/exec";
 
 /**
  * Tiempo (ms) para cerrar el modal después del mensaje de éxito
@@ -1930,47 +1930,49 @@ if(quoteForm){
 
     if(successMsg) successMsg.classList.remove("show");
 
-    try{
-      const res = await fetch(APPS_SCRIPT_WEBAPP_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-const text = await res.text();
-console.log("RAW:", text);
-
-let data;
 try{
-  data = JSON.parse(text);
-}catch(e){
-  throw new Error("Apps Script devolvió algo que NO es JSON. Revisa consola.");
+  const params = new URLSearchParams(payload);
+
+  const res = await fetch(APPS_SCRIPT_WEBAPP_URL, {
+    method: "POST",
+    body: params
+  });
+
+  const text = await res.text();
+  console.log("RAW:", text);
+
+  let data;
+  try{
+    data = JSON.parse(text);
+  }catch(e){
+    throw new Error("Apps Script devolvió algo que NO es JSON.");
+  }
+
+  if(!data.ok){
+    throw new Error(data.error || "Error desconocido");
+  }
+
+  // Éxito
+  if(successMsg){
+    successMsg.innerHTML = `
+      ✅ ¡Gracias! Recibimos tu cotización.<br>
+      <span style="opacity:.85">Tu folio es: <b>${data.folio}</b></span><br>
+      <span style="opacity:.75">Nos pondremos en contacto contigo muy pronto.</span>
+    `;
+    successMsg.classList.add("show");
+  }
+
+  quoteForm.reset();
+
+  setTimeout(() => {
+    closeModal("modalCot");
+    if(successMsg) successMsg.classList.remove("show");
+  }, AUTO_CLOSE_MS);
+
+}catch(err){
+  alert("❌ No se pudo enviar tu cotización.\n\n" + err.message);
 }
-
-      if(!data.ok){
-        throw new Error(data.error || "Error desconocido");
-      }
-
-      if(successMsg){
-        successMsg.innerHTML = `
-          ✅ ¡Gracias! Recibimos tu cotización.<br>
-          <span style="opacity:.85">Tu folio es: <b>${data.folio}</b></span><br>
-          <span style="opacity:.75">Nos pondremos en contacto contigo muy pronto.</span>
-        `;
-        successMsg.classList.add("show");
-      }
-
-      quoteForm.reset();
-
-      setTimeout(() => {
-        closeModal("modalCot");
-        if(successMsg) successMsg.classList.remove("show");
-      }, AUTO_CLOSE_MS);
-
-    }catch(err){
-      alert("❌ No se pudo enviar tu cotización.\n\n" + err.message);
-
-    }finally{
+finally{
       if(submitBtn){
         submitBtn.disabled = false;
         submitBtn.style.opacity = "";
