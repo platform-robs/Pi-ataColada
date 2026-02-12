@@ -137,12 +137,18 @@ NOTA:
       padding: 14px 0;
     }
 
-.brand{
-  display:flex;
-  align-items:center;
-  gap: 12px;
-  min-width: 0; /* ✅ IMPORTANTÍSIMO */
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* centra horizontalmente */
+  padding: 10px 0;
 }
+
+.brand-logo {
+  max-height: 60px; /* ajusta según tu diseño */
+  width: auto;
+}
+
 
 
     .brand-dot{
@@ -1217,14 +1223,11 @@ NOTA:
     <div class="container">
 
       <div class="nav">
-        <!-- Marca -->
-        <div class="brand">
-          <div class="brand-dot" aria-hidden="true"></div>
-          <div>
-            <div class="brand-name">Piñata Colada</div>
-            <div class="brand-tag">Piñatas personalizadas</div>
-          </div>
-        </div>
+<!-- Marca con logo -->
+<div class="brand">
+  <img src="assets/logo.png" alt="Piñata Colada" class="brand-logo" />
+</div>
+
 
         <!-- Links desktop -->
         <nav class="nav-links" aria-label="Secciones">
