@@ -1789,33 +1789,41 @@ document.querySelectorAll(".card").forEach(card => {
    6) GALERÍA (placeholders de ejemplo)
    ========================================================== */
 
-const demoShots = [
-  "Unicornio",
-  "Spiderman",
-  "Hello Kitty",
-  "Mario",
-  "Barbie",
-  "Paw Patrol",
-  "Goku",
-  "Sonic",
-  "Frozen",
-  "BTS"
+const galleryTop = [
+  "assets/gallery/01.jpg",
+  "assets/gallery/02.jpg",
+  "assets/gallery/03.jpg",
+  "assets/gallery/04.jpg",
+  "assets/gallery/05.jpg",
 ];
 
-function fillTrack(trackId){
+const galleryBottom = [
+  "assets/gallery/06.jpg",
+  "assets/gallery/07.jpg",
+  "assets/gallery/08.jpg",
+  "assets/gallery/09.jpg",
+  "assets/gallery/10.jpg",
+];
+
+
+function fillTrack(trackId, images){
   const track = document.getElementById(trackId);
   if(!track) return;
 
-  // Duplicamos para que el marquee sea infinito
-  const items = [...demoShots, ...demoShots];
+  // Duplicamos para infinito
+  const items = [...images, ...images];
 
-  track.innerHTML = items.map(txt => `
-    <div class="shot"><span>${txt}</span></div>
+  track.innerHTML = items.map(src => `
+    <div class="shot">
+      <img src="${src}" alt="Piñata personalizada">
+    </div>
   `).join("");
 }
 
-fillTrack("trackLeft");
-fillTrack("trackRight");
+
+fillTrack("trackLeft", galleryTop);
+fillTrack("trackRight", galleryBottom);
+
 
 
 /* ==========================================================
