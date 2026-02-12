@@ -1,0 +1,1382 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Piñata Colada | Piñatas personalizadas</title>
+  <meta name="description" content="Piñatas personalizadas en Aguascalientes. Diseños únicos, tamaños chica/mediana/grande y 100% personalizados. Cotiza en minutos." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #0b0b10;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.08);
+      --stroke: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --muted2: rgba(255,255,255,.55);
+
+      /* Brand */
+      --pink: #ff4fa6;
+      --pink2:#ff77c0;
+      --yellow: #ffd54a;
+      --yellow2:#ffe07a;
+
+      --ok: #22c55e;
+      --bad:#ef4444;
+
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(0,0,0,.55);
+      --shadow2: 0 18px 45px rgba(0,0,0,.35);
+
+      --container: 1180px;
+    }
+
+    *{ box-sizing: border-box; }
+    html, body{ height: 100%; }
+    body{
+      margin:0;
+      font-family: "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 900px at 20% 10%, rgba(255,79,166,.22), transparent 55%),
+        radial-gradient(1000px 800px at 90% 25%, rgba(255,213,74,.20), transparent 55%),
+        radial-gradient(1200px 900px at 50% 100%, rgba(255,255,255,.05), transparent 60%),
+        var(--bg);
+      overflow-x: hidden;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    img{ max-width: 100%; display:block; }
+
+    /* Subtle grain */
+    body:before{
+      content:"";
+      position: fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.10;
+      mix-blend-mode: overlay;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+    }
+
+    /* Layout */
+    .container{ width: min(var(--container), calc(100% - 40px)); margin: 0 auto; }
+
+    header{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(10,10,16,.72), rgba(10,10,16,.35));
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 0;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 220px;
+    }
+
+    .brand-dot{
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--pink), var(--yellow));
+      box-shadow: 0 0 0 6px rgba(255,79,166,.12), 0 0 0 12px rgba(255,213,74,.08);
+    }
+
+    .brand-name{
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+
+    .nav-links{
+      display:flex;
+      align-items:center;
+      gap: 18px;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .nav-links a{ opacity: .9; }
+    .nav-links a:hover{ opacity: 1; color: #fff; }
+
+    .nav-cta{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+
+    .btn{
+      appearance:none;
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 800;
+      letter-spacing: .2px;
+      border-radius: 999px;
+      padding: 12px 16px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, opacity .18s ease;
+      user-select: none;
+    }
+
+    .btn:active{ transform: translateY(1px) scale(.99); }
+
+    .btn-primary{
+      background: linear-gradient(135deg, var(--pink), var(--yellow));
+      color: #111;
+      box-shadow: 0 18px 40px rgba(255,79,166,.18), 0 18px 40px rgba(255,213,74,.14);
+    }
+
+    .btn-primary:hover{ transform: translateY(-1px); box-shadow: 0 22px 60px rgba(255,79,166,.22), 0 22px 60px rgba(255,213,74,.18); }
+
+    .btn-ghost{
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .btn-ghost:hover{ background: rgba(255,255,255,.10); }
+
+    /* Hero */
+    .hero{
+      padding: 54px 0 30px;
+      position: relative;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .kicker b{ color: #fff; }
+
+    h1{
+      margin: 16px 0 12px;
+      font-size: clamp(34px, 4vw, 54px);
+      line-height: 1.02;
+      letter-spacing: -0.9px;
+    }
+
+    .lead{
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: clamp(15px, 1.5vw, 18px);
+      line-height: 1.6;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items:center;
+      margin-top: 18px;
+    }
+
+    .hero-badges{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    /* Logo hero */
+    .logo-wrap{
+      display:grid;
+      place-items: center;
+      padding: 26px;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow:hidden;
+      min-height: 360px;
+    }
+
+    .logo-wrap:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 500px at 30% 20%, rgba(255,79,166,.25), transparent 55%),
+        radial-gradient(700px 500px at 70% 60%, rgba(255,213,74,.18), transparent 55%);
+      filter: blur(2px);
+      opacity: .9;
+    }
+
+    .logo-wrap:after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: radial-gradient(900px 600px at 50% 0%, rgba(255,255,255,.06), transparent 60%);
+      pointer-events:none;
+    }
+
+    .logo-inner{
+      position: relative;
+      z-index: 2;
+      width: min(360px, 78%);
+      aspect-ratio: 1/1;
+      display:grid;
+      place-items:center;
+    }
+
+    .logo-img{
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 18px 30px rgba(0,0,0,.45)) drop-shadow(0 0 24px rgba(255,79,166,.12));
+      transform-origin: 50% 8%;
+      animation: pinataSway 6s ease-in-out infinite;
+    }
+
+    /* Every ~3s a tiny “hit” shake */
+    .logo-img.hit{
+      animation: pinataSway 6s ease-in-out infinite, pinataHit 3s ease-in-out infinite;
+    }
+
+    @keyframes pinataSway{
+      0%, 100%{ transform: rotate(-1.6deg) translateY(0px); }
+      50%{ transform: rotate(1.8deg) translateY(-2px); }
+    }
+
+    @keyframes pinataHit{
+      0%{ transform: rotate(-1.6deg) translateY(0px); }
+      8%{ transform: rotate(3.4deg) translateY(-3px); }
+      16%{ transform: rotate(-2.8deg) translateY(2px); }
+      24%{ transform: rotate(1.6deg) translateY(-1px); }
+      32%{ transform: rotate(-1.2deg) translateY(0px); }
+      100%{ transform: rotate(-1.6deg) translateY(0px); }
+    }
+
+    .logo-hint{
+      position:absolute;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      z-index: 3;
+      color: var(--muted2);
+      font-weight: 700;
+      font-size: 13px;
+      text-align:center;
+    }
+
+    /* Sections */
+    section{ padding: 44px 0; }
+
+    .section-title{
+      display:flex;
+      align-items:flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .section-title h2{
+      margin:0;
+      font-size: clamp(22px, 2.3vw, 32px);
+      letter-spacing: -.4px;
+    }
+
+    .section-title p{
+      margin:0;
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.5;
+      max-width: 520px;
+    }
+
+    /* Cards */
+    .grid-3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card{
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow2);
+      padding: 18px;
+      position: relative;
+      overflow:hidden;
+    }
+
+    .card:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      opacity: .5;
+      background:
+        radial-gradient(700px 500px at 15% 0%, rgba(255,79,166,.16), transparent 55%),
+        radial-gradient(700px 500px at 85% 40%, rgba(255,213,74,.12), transparent 55%);
+      pointer-events:none;
+    }
+
+    .card > *{ position: relative; z-index: 2; }
+
+    .size-row{
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .size-name{
+      font-weight: 900;
+      letter-spacing: -.3px;
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .size-sub{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .pinata-icon{
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+      display:grid;
+      place-items:center;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    .pinata-icon svg{ display:block; }
+
+    .toggle{
+      margin-top: 14px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(0,0,0,.20);
+      border: 1px solid rgba(255,255,255,.10);
+      cursor: pointer;
+      user-select:none;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .toggle span{ color: var(--muted); font-weight: 700; }
+
+    .price{
+      margin-top: 12px;
+      display:none;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      border: 1px dashed rgba(255,255,255,.16);
+      color: var(--muted);
+      font-weight: 650;
+      line-height: 1.55;
+    }
+
+    .card.open .price{ display:block; }
+
+    .note{
+      margin-top: 14px;
+      color: rgba(255,255,255,.70);
+      font-weight: 650;
+      line-height: 1.55;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+
+    .note b{ color: #fff; }
+
+    /* Infinite carousel */
+    .carousel-wrap{ display:grid; gap: 14px; }
+
+    .marquee{
+      position: relative;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+      padding: 12px 0;
+    }
+
+    .track{
+      display:flex;
+      gap: 14px;
+      width: max-content;
+      animation: scrollLeft 28s linear infinite;
+      will-change: transform;
+    }
+
+    .marquee.right .track{ animation: scrollRight 32s linear infinite; }
+
+    @keyframes scrollLeft{
+      0%{ transform: translateX(0); }
+      100%{ transform: translateX(-50%); }
+    }
+
+    @keyframes scrollRight{
+      0%{ transform: translateX(-50%); }
+      100%{ transform: translateX(0); }
+    }
+
+    .shot{
+      width: 190px;
+      height: 120px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(255,79,166,.18), rgba(255,213,74,.14));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 14px 34px rgba(0,0,0,.30);
+      position: relative;
+      overflow:hidden;
+      display:grid;
+      place-items:center;
+      color: rgba(255,255,255,.86);
+      font-weight: 900;
+      letter-spacing: -.3px;
+    }
+
+    .shot:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(600px 200px at 20% 20%, rgba(255,255,255,.16), transparent 60%);
+    }
+
+    .shot span{ position:relative; z-index: 2; }
+
+    /* FAQ */
+    .faq{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    details{
+      border-radius: 20px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 14px 16px;
+    }
+
+    summary{
+      cursor: pointer;
+      font-weight: 900;
+      letter-spacing: -.2px;
+      list-style:none;
+    }
+
+    summary::-webkit-details-marker{ display:none; }
+
+    details p{
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-weight: 650;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    footer{
+      padding: 34px 0 46px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.20);
+    }
+
+    .footer-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items:start;
+    }
+
+    .socials{ display:flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      opacity: .92;
+    }
+
+    .pill:hover{ opacity: 1; background: rgba(255,255,255,.08); }
+
+    .fine{
+      color: var(--muted2);
+      font-weight: 650;
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    /* Modal */
+    .modal{
+      position: fixed;
+      inset:0;
+      display:none;
+      place-items:center;
+      z-index: 100;
+      padding: 18px;
+      background: rgba(0,0,0,.62);
+      backdrop-filter: blur(10px);
+    }
+
+    .modal.open{ display:grid; }
+
+    .modal-card{
+      width: min(720px, 100%);
+      border-radius: 26px;
+      background: rgba(20,20,28,.86);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 40px 120px rgba(0,0,0,.65);
+      overflow:hidden;
+    }
+
+    .modal-head{
+      padding: 18px 18px 14px;
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .modal-head h3{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: -.3px;
+    }
+
+    .modal-head p{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-weight: 650;
+      line-height: 1.45;
+      font-size: 13px;
+    }
+
+    .x{
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .x:hover{ background: rgba(255,255,255,.10); }
+
+    form{
+      padding: 18px;
+      display:grid;
+      gap: 12px;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    label{
+      display:grid;
+      gap: 8px;
+      color: rgba(255,255,255,.82);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    input, select, textarea{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color: #fff;
+      font-family: inherit;
+      font-weight: 650;
+      outline: none;
+      transition: border .18s ease, transform .18s ease;
+    }
+
+    input:focus, select:focus, textarea:focus{ border-color: rgba(255,213,74,.55); }
+
+    textarea{ min-height: 92px; resize: vertical; }
+
+    .form-actions{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+
+    .helper{
+      color: var(--muted2);
+      font-weight: 650;
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+
+    .success{
+      display:none;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(34,197,94,.12);
+      border: 1px solid rgba(34,197,94,.35);
+      color: rgba(255,255,255,.90);
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .success.show{ display:block; }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .logo-wrap{ min-height: 320px; }
+      .grid-3{ grid-template-columns: 1fr; }
+      .faq{ grid-template-columns: 1fr; }
+      .footer-grid{ grid-template-columns: 1fr; }
+      .nav-links{ display:none; }
+      .form-grid{ grid-template-columns: 1fr; }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .logo-img, .logo-img.hit, .track{ animation: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div class="nav">
+        <div class="brand">
+          <div class="brand-dot" aria-hidden="true"></div>
+          <div>
+            <div class="brand-name">Piñata Colada</div>
+            <div style="color: var(--muted2); font-weight:700; font-size: 12px;">Piñatas personalizadas</div>
+          </div>
+        </div>
+
+        <nav class="nav-links" aria-label="Secciones">
+          <a href="#tamanos">Tamaños</a>
+          <a href="#galeria">Galería</a>
+          <a href="#faq">Preguntas</a>
+          <a href="#contacto">Cotizar</a>
+        </nav>
+
+        <div class="nav-cta">
+          <button class="btn btn-ghost" id="btnWhats">WhatsApp</button>
+          <button class="btn btn-primary" id="btnCotizarTop">Realizar cotización</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <div class="kicker">✨ Hechas a mano • <b>Diseños únicos</b> • Entrega para tu evento</div>
+            <h1>Piñatas personalizadas que se roban el show 🎉</h1>
+            <p class="lead">
+              En <b>Piñata Colada</b> creamos piñatas con un acabado increíble, súper fotogénicas y listas para tu fiesta.
+              Elige tamaño, dinos la idea… y nosotros hacemos la magia.
+            </p>
+
+            <div class="hero-actions">
+              <button class="btn btn-primary" id="btnCotizarHero">Realizar cotización</button>
+              <a class="btn btn-ghost" href="#galeria">Ver galería</a>
+            </div>
+
+            <div class="hero-badges">
+              <div class="badge">💖 Personalizadas</div>
+              <div class="badge">🕒 Entregas por fecha</div>
+              <div class="badge">📍 Aguascalientes</div>
+              <div class="badge">🧁 Temáticas: todo</div>
+            </div>
+          </div>
+
+          <div class="logo-wrap" aria-label="Logo Piñata Colada">
+            <div class="logo-inner">
+              <!-- Reemplaza la ruta por tu logo PNG -->
+              <img class="logo-img hit" src="assets/logo.png" alt="Logo Piñata Colada" />
+            </div>
+            <div class="logo-hint">(Sutil movimiento tipo piñata, cada ~3s)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tamanos">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>Elige tu tamaño</h2>
+            <p>3 tamaños principales. Haz clic en cada uno para ver precios (puedes editarlos en el código).</p>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <!-- CHICA -->
+          <article class="card" data-size="Chica">
+            <div class="size-row">
+              <div>
+                <p class="size-name">Chica</p>
+                <p class="size-sub">Ideal para detalles, mini fiestas o mesa de dulces.</p>
+              </div>
+              <div class="pinata-icon" aria-hidden="true">
+                <!-- simple pinata icon -->
+                <svg width="40" height="40" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M32 7c9 0 16 6.7 16 15 0 6.7-4.5 12.4-10.8 14.4V55c0 1.7-1.4 3-3.2 3h-4c-1.8 0-3.2-1.3-3.2-3V36.4C20.5 34.4 16 28.7 16 22c0-8.3 7-15 16-15Z" stroke="rgba(255,255,255,.82)" stroke-width="3"/>
+                  <path d="M24 22h16" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M26 28h12" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="toggle" role="button" tabindex="0">
+              <div>Ver precios <span>(clic)</span></div>
+              <div>＋</div>
+            </div>
+
+            <div class="price">
+              <b>Desde:</b> $___ MXN<br>
+              <b>Incluye:</b> personalización básica, colores, listones.<br>
+              <b>Tiempo:</b> 3–5 días (según agenda).
+            </div>
+          </article>
+
+          <!-- MEDIANA -->
+          <article class="card" data-size="Mediana">
+            <div class="size-row">
+              <div>
+                <p class="size-name">Mediana</p>
+                <p class="size-sub">La más pedida. Perfecta para cumpleaños y sesiones de fotos.</p>
+              </div>
+              <div class="pinata-icon" aria-hidden="true">
+                <svg width="46" height="46" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M32 6c10.2 0 18.5 7.6 18.5 17 0 7.4-5 13.7-12.5 15.8V55c0 2-1.6 3.5-3.6 3.5h-4.8c-2 0-3.6-1.5-3.6-3.5V38.8C18.5 36.7 13.5 30.4 13.5 23 13.5 13.6 21.8 6 32 6Z" stroke="rgba(255,255,255,.86)" stroke-width="3"/>
+                  <path d="M22 23h20" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M24 30h16" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M26 36h12" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="toggle" role="button" tabindex="0">
+              <div>Ver precios <span>(clic)</span></div>
+              <div>＋</div>
+            </div>
+
+            <div class="price">
+              <b>Desde:</b> $___ MXN<br>
+              <b>Incluye:</b> personalización + detalles extra.<br>
+              <b>Tiempo:</b> 4–7 días (según complejidad).
+            </div>
+          </article>
+
+          <!-- GRANDE -->
+          <article class="card" data-size="Grande">
+            <div class="size-row">
+              <div>
+                <p class="size-name">Grande</p>
+                <p class="size-sub">Impacto total. Para eventos grandes, fotos y el momento WOW.</p>
+              </div>
+              <div class="pinata-icon" aria-hidden="true">
+                <svg width="52" height="52" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M32 5c11.4 0 20.5 8.3 20.5 18.5 0 8-5.6 14.9-14 17.2V55c0 2.2-1.8 4-4 4h-5c-2.2 0-4-1.8-4-4V40.7c-8.4-2.3-14-9.2-14-17.2C11.5 13.3 20.6 5 32 5Z" stroke="rgba(255,255,255,.90)" stroke-width="3"/>
+                  <path d="M20 23h24" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M22 31h20" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M24 39h16" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="toggle" role="button" tabindex="0">
+              <div>Ver precios <span>(clic)</span></div>
+              <div>＋</div>
+            </div>
+
+            <div class="price">
+              <b>Desde:</b> $___ MXN<br>
+              <b>Incluye:</b> diseño con alto detalle + volumen extra.<br>
+              <b>Tiempo:</b> 7–10 días (según agenda).
+            </div>
+          </article>
+        </div>
+
+        <div class="note">
+          <b>¿Quieres un diseño 100% personalizado?</b> No te preocupes 😄.
+          Escríbenos tu idea y con gusto te ayudamos a aterrizarla y cotizarla.
+        </div>
+      </div>
+    </section>
+
+    <section id="galeria">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>Galería</h2>
+            <p>Ejemplos de estilos y temáticas. (Aquí puedes reemplazar por fotos reales.)</p>
+          </div>
+        </div>
+
+        <div class="carousel-wrap">
+          <div class="marquee">
+            <div class="track" id="trackLeft"></div>
+          </div>
+
+          <div class="marquee right">
+            <div class="track" id="trackRight"></div>
+          </div>
+        </div>
+
+        <div style="margin-top: 18px; display:flex; justify-content:center;">
+          <button class="btn btn-primary" id="btnCotizarMid">Realizar cotización</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>Preguntas frecuentes</h2>
+            <p>Lo más importante para que tu piñata quede perfecta y llegue a tiempo.</p>
+          </div>
+        </div>
+
+        <div class="faq">
+          <details>
+            <summary>¿Con cuánta anticipación debo pedir?</summary>
+            <p>Lo ideal es de 5 a 10 días. En temporadas altas puede variar, así que entre antes mejor.</p>
+          </details>
+          <details>
+            <summary>¿Hacen piñatas 100% personalizadas?</summary>
+            <p>Sí. Puedes elegir la opción “100% personalizada” en la cotización y describir tu idea.</p>
+          </details>
+          <details>
+            <summary>¿Se pueden hacer de cualquier temática?</summary>
+            <p>¡Claro! Personajes, deportes, películas, videojuegos, logos, nombres, etc.</p>
+          </details>
+          <details>
+            <summary>¿Qué incluye el precio?</summary>
+            <p>Incluye el diseño, materiales, armado y acabados. El relleno (dulces) se cotiza aparte si lo requieres.</p>
+          </details>
+          <details>
+            <summary>¿Entregan a domicilio?</summary>
+            <p>Podemos acordar punto de entrega o envío local. Depende de la zona y tamaño.</p>
+          </details>
+          <details>
+            <summary>¿Puedo pedir varias piñatas?</summary>
+            <p>Sí. En el formulario puedes detallar lo que necesitas y te contactamos para ajustar la cotización.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacto">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>¿List@ para cotizar?</h2>
+            <p>Te toma menos de 1 minuto. En cuanto nos llegue, te respondemos por WhatsApp.</p>
+          </div>
+        </div>
+
+        <div style="display:flex; gap: 12px; flex-wrap: wrap;">
+          <button class="btn btn-primary" id="btnCotizarBottom">Realizar cotización</button>
+          <button class="btn btn-ghost" id="btnWhats2">Escribir por WhatsApp</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div style="font-weight: 900; font-size: 18px; letter-spacing: -.2px;">Piñata Colada</div>
+          <div class="fine">Piñatas personalizadas • Aguascalientes, Ags</div>
+          <div class="socials">
+            <a class="pill" href="#" target="_blank" rel="noopener">📘 Facebook</a>
+            <a class="pill" href="#" target="_blank" rel="noopener">📸 Instagram</a>
+            <a class="pill" href="#" target="_blank" rel="noopener">🎵 TikTok</a>
+          </div>
+          <div class="fine">© <span id="year"></span> Piñata Colada. Todos los derechos reservados.</div>
+        </div>
+
+        <div>
+          <div style="font-weight: 900; letter-spacing: -.2px;">Legal</div>
+          <div class="fine" style="margin-top: 10px; display:grid; gap: 10px;">
+            <a class="pill" href="#" id="btnTerms">📄 Términos y condiciones</a>
+            <a class="pill" href="#" id="btnPrivacy">🔒 Aviso de privacidad</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL: Cotización -->
+  <div class="modal" id="modalCot">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Formulario de cotización">
+      <div class="modal-head">
+        <div>
+          <h3>Realizar cotización</h3>
+          <p>Completa la información. Al enviar, se guardará en Google Sheets y se notificará por WhatsApp.</p>
+        </div>
+        <button class="x" id="closeCot" aria-label="Cerrar">×</button>
+      </div>
+
+      <form id="cotForm">
+        <div class="success" id="successBox">Muchas gracias por tu solicitud, nos pondremos en contacto contigo 💖</div>
+
+        <div class="form-grid">
+          <label>
+            Nombre del cliente
+            <input name="nombre" required placeholder="Ej. Ana López" />
+          </label>
+
+          <label>
+            Tipo de piñata
+            <select name="tamano" required>
+              <option value="">Selecciona…</option>
+              <option>Chica</option>
+              <option>Mediana</option>
+              <option>Grande</option>
+              <option>100% personalizada</option>
+            </select>
+          </label>
+
+          <label>
+            ¿De qué será tu piñata?
+            <input name="tema" required placeholder="Ej. Spiderman, Frozen, Futbol, etc." />
+          </label>
+
+          <label>
+            Fecha en que se necesita
+            <input type="date" name="fecha" required />
+          </label>
+
+          <label>
+            Tipo de evento
+            <input name="evento" required placeholder="Ej. Cumpleaños, bautizo, baby shower…" />
+          </label>
+
+          <label>
+            Teléfono (opcional)
+            <input name="telefono" placeholder="Ej. 4491234567" />
+          </label>
+        </div>
+
+        <label>
+          Detalles extra (opcional)
+          <textarea name="detalles" placeholder="Colores, nombre, número de años, referencias, etc."></textarea>
+        </label>
+
+        <div class="form-actions">
+          <div class="helper">
+            *Al enviar, se genera un folio automático tipo <b>COT-0001</b>.
+          </div>
+
+          <button class="btn btn-primary" type="submit" id="sendBtn">Enviar solicitud</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Legal -->
+  <div class="modal" id="modalLegal">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Contenido legal">
+      <div class="modal-head">
+        <div>
+          <h3 id="legalTitle">Legal</h3>
+          <p id="legalSubtitle">Información importante.</p>
+        </div>
+        <button class="x" id="closeLegal" aria-label="Cerrar">×</button>
+      </div>
+
+      <div style="padding: 18px; color: var(--muted); font-weight: 650; line-height: 1.7;">
+        <div id="legalBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =============================
+    // CONFIG
+    // =============================
+
+    // 1) WhatsApp del negocio
+    const WHATSAPP_NUMBER = "4465165882";
+
+    // 2) Web App URL de Google Apps Script
+    // Pega aquí tu URL (después de desplegar el script como Web App)
+    const APPS_SCRIPT_WEBAPP_URL = "";
+
+    // 3) Textos legales (editables)
+    const TERMS_HTML = `
+      <p><b>Términos y condiciones</b></p>
+      <p>Las cotizaciones están sujetas a disponibilidad de agenda, complejidad del diseño y fecha solicitada.</p>
+      <p>Para confirmar pedidos puede requerirse anticipo. Cambios de último momento pueden modificar el precio.</p>
+      <p>Las imágenes son ilustrativas. Se respetan referencias, pero pueden existir variaciones artesanales.</p>
+    `;
+
+    const PRIVACY_HTML = `
+      <p><b>Aviso de privacidad</b></p>
+      <p>La información enviada se utiliza únicamente para responder tu solicitud de cotización.</p>
+      <p>No compartimos tus datos con terceros. Puedes solicitar la eliminación de tu información en cualquier momento.</p>
+    `;
+
+    // =============================
+    // Helpers
+    // =============================
+
+    const $ = (q, el=document) => el.querySelector(q);
+    const $$ = (q, el=document) => Array.from(el.querySelectorAll(q));
+
+    function openModal(id){
+      const m = $(id);
+      if(!m) return;
+      m.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal(id){
+      const m = $(id);
+      if(!m) return;
+      m.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    function formatDateISOToMX(iso){
+      if(!iso) return "";
+      const [y,m,d] = iso.split("-");
+      return `${d}/${m}/${y}`;
+    }
+
+    function openWhatsApp(message){
+      const text = encodeURIComponent(message);
+      const url = `https://wa.me/52${WHATSAPP_NUMBER}?text=${text}`;
+      window.open(url, "_blank", "noopener");
+    }
+
+    // =============================
+    // UI
+    // =============================
+
+    // Year
+    $("#year").textContent = new Date().getFullYear();
+
+    // Price toggles
+    $$(".card").forEach(card => {
+      const toggle = card.querySelector(".toggle");
+      const plus = toggle.querySelector("div:last-child");
+
+      const setState = (open) => {
+        card.classList.toggle("open", open);
+        plus.textContent = open ? "−" : "＋";
+      };
+
+      toggle.addEventListener("click", () => setState(!card.classList.contains("open")));
+      toggle.addEventListener("keydown", (e) => {
+        if(e.key === "Enter" || e.key === " "){
+          e.preventDefault();
+          setState(!card.classList.contains("open"));
+        }
+      });
+    });
+
+    // Gallery (infinite)
+    const left = $("#trackLeft");
+    const right = $("#trackRight");
+
+    const shots = [
+      "Unicornio", "Mario", "Spiderman", "Frozen", "Barbie", "Stitch",
+      "Pokémon", "Minnie", "Sonic", "Dragon Ball", "Kuromi", "Among Us"
+    ];
+
+    function buildMarquee(track){
+      const items = [...shots, ...shots];
+      track.innerHTML = items.map(t => `<div class="shot"><span>${t}</span></div>`).join("");
+    }
+
+    buildMarquee(left);
+    buildMarquee(right);
+
+    // CTA buttons
+    ["#btnCotizarTop", "#btnCotizarHero", "#btnCotizarMid", "#btnCotizarBottom"].forEach(id => {
+      $(id).addEventListener("click", () => openModal("#modalCot"));
+    });
+
+    $("#btnWhats").addEventListener("click", () => {
+      openWhatsApp("Hola 😊 Me gustaría información sobre piñatas personalizadas.");
+    });
+
+    $("#btnWhats2").addEventListener("click", () => {
+      openWhatsApp("Hola 😊 Me gustaría cotizar una piñata.");
+    });
+
+    // Legal modal
+    function openLegal(title, subtitle, html){
+      $("#legalTitle").textContent = title;
+      $("#legalSubtitle").textContent = subtitle;
+      $("#legalBody").innerHTML = html;
+      openModal("#modalLegal");
+    }
+
+    $("#btnTerms").addEventListener("click", (e) => {
+      e.preventDefault();
+      openLegal("Términos y condiciones", "Información sobre pedidos y cotizaciones.", TERMS_HTML);
+    });
+
+    $("#btnPrivacy").addEventListener("click", (e) => {
+      e.preventDefault();
+      openLegal("Aviso de privacidad", "Cómo usamos tu información.", PRIVACY_HTML);
+    });
+
+    // Close modals
+    $("#closeCot").addEventListener("click", () => closeModal("#modalCot"));
+    $("#closeLegal").addEventListener("click", () => closeModal("#modalLegal"));
+
+    // Close on outside click
+    ["#modalCot", "#modalLegal"].forEach(id => {
+      $(id).addEventListener("click", (e) => {
+        if(e.target === $(id)) closeModal(id);
+      });
+    });
+
+    // Close on ESC
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape"){
+        closeModal("#modalCot");
+        closeModal("#modalLegal");
+      }
+    });
+
+    // =============================
+    // Submit: Google Sheets + WhatsApp
+    // =============================
+
+    const form = $("#cotForm");
+    const sendBtn = $("#sendBtn");
+    const successBox = $("#successBox");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      successBox.classList.remove("show");
+
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      // Mensaje WhatsApp
+      const waMsg =
+`Hola 👋 Soy ${data.nombre}.
+
+Quiero cotizar una piñata:
+• Tamaño: ${data.tamano}
+• Tema: ${data.tema}
+• Fecha: ${formatDateISOToMX(data.fecha)}
+• Evento: ${data.evento}
+• Teléfono: ${data.telefono || "(no indicado)"}
+• Detalles: ${data.detalles || "(sin detalles extra)"}
+
+¿Me ayudan por favor? 💖`;
+
+      // UI lock
+      sendBtn.disabled = true;
+      sendBtn.style.opacity = .75;
+      sendBtn.textContent = "Enviando…";
+
+      // 1) Guardar en Google Sheets (si hay URL configurada)
+      let saved = false;
+      let folio = "";
+
+      try{
+        if(APPS_SCRIPT_WEBAPP_URL){
+          const res = await fetch(APPS_SCRIPT_WEBAPP_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              nombre: data.nombre,
+              tamano: data.tamano,
+              tema: data.tema,
+              fecha: data.fecha,
+              evento: data.evento,
+              telefono: data.telefono || "",
+              detalles: data.detalles || ""
+            })
+          });
+
+          const json = await res.json();
+          if(json && json.ok){
+            saved = true;
+            folio = json.folio || "";
+          }
+        }
+      }catch(err){
+        // no rompemos la UX
+        console.warn("No se pudo guardar en Sheets:", err);
+      }
+
+      // 2) Abrir WhatsApp (con folio si se generó)
+      const finalMsg = folio ? `${waMsg}\n\nFolio: ${folio}` : waMsg;
+      openWhatsApp(finalMsg);
+
+      // Success UI
+      successBox.classList.add("show");
+      sendBtn.textContent = "Enviado ✓";
+
+      // Mantener bloqueado (como pediste)
+      // form.reset(); // opcional
+    });
+  </script>
+</body>
+</html>
+
+<!--
+=============================
+GOOGLE APPS SCRIPT (Code.gs)
+=============================
+
+1) Crea un proyecto en script.google.com
+2) Pega este código en Code.gs
+3) Ajusta SPREADSHEET_ID y SHEET_NAME
+4) Deploy > New deployment > Web app
+   - Execute as: Me
+   - Who has access: Anyone
+5) Copia la URL y pégala en APPS_SCRIPT_WEBAPP_URL en este HTML
+
+
+const SPREADSHEET_ID = "1YoPCt6VqYuF0F0d7IG2NWtHHiNpW3R0DQOZ1Dmz2udM";
+const SHEET_NAME = "COTIZACIONES";
+
+function doPost(e){
+  try{
+    const body = JSON.parse(e.postData.contents);
+
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sh = ss.getSheetByName(SHEET_NAME);
+
+    if(!sh) throw new Error("No existe la hoja: " + SHEET_NAME);
+
+    // Encabezados recomendados:
+    // A: Folio
+    // B: Timestamp
+    // C: Nombre
+    // D: Tamaño
+    // E: Tema
+    // F: Fecha
+    // G: Evento
+    // H: Teléfono
+    // I: Detalles
+
+    // Calcula folio por contador
+    const lastRow = sh.getLastRow();
+    let nextNumber = 1;
+
+    if(lastRow >= 2){
+      const lastFolio = sh.getRange(lastRow, 1).getValue();
+      const m = String(lastFolio).match(/COT-(\d+)/);
+      if(m) nextNumber = Number(m[1]) + 1;
+    }
+
+    const folio = "COT-" + String(nextNumber).padStart(4, "0");
+
+    const row = [
+      folio,
+      new Date(),
+      body.nombre || "",
+      body.tamano || "",
+      body.tema || "",
+      body.fecha || "",
+      body.evento || "",
+      body.telefono || "",
+      body.detalles || ""
+    ];
+
+    sh.appendRow(row);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: true, folio }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  }catch(err){
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+-->
