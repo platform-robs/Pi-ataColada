@@ -688,10 +688,12 @@ NOTA:
       will-change: transform;
     }
 
+    #trackRight{
+      animation: scrollRight 28s linear infinite;
+    }
+
     /* Si el usuario pasa el mouse, pausamos (UX premium) */
     .marquee:hover .track{ animation-play-state: paused; }
-
-    .marquee.right .track{ animation: scrollRight 32s linear infinite; }
 
     @keyframes scrollLeft{
       0%{ transform: translateX(0); }
@@ -1426,7 +1428,7 @@ NOTA:
             <div class="track" id="trackLeft"></div>
           </div>
 
-          <div class="marquee right">
+          <div class="marquee">
             <div class="track" id="trackRight"></div>
           </div>
         </div>
