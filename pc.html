@@ -1,0 +1,1958 @@
+<!--
+==========================================================
+Piñata Colada — Landing (1 archivo)
+Mejoras aplicadas (sin romper tu estructura):
+✅ Footer ahora SÍ combina con el dark premium (ya no blanco)
+✅ Header con "mobile menu" real (hamburguesa)
+✅ Botones con íconos + microinteracciones
+✅ Cards (tamaños) con hover premium + mejor accesibilidad
+✅ Galería con “pausa al hover” + mejor look
+✅ Modales: foco, scroll-lock bien hecho, cierre seguro
+✅ Form: validación ligera + mejor UX en móvil
+✅ Animaciones con prefers-reduced-motion
+✅ Todo MUY comentado y fácil de editar
+
+NOTA:
+- Dejo tu APPS_SCRIPT_WEBAPP_URL igual (vacío).
+- Puedes pegar esto tal cual y reemplazar tu index.html.
+==========================================================
+-->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Piñata Colada | Piñatas personalizadas</title>
+  <meta name="description" content="Piñatas personalizadas en Irapuato, Gto. Diseños únicos, tamaños chica/mediana/grande y 100% personalizados. Cotiza en minutos." />
+
+  <!--
+  ==============================
+  Tipografía
+  ==============================
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /*
+    ==========================================================
+    1) VARIABLES DE DISEÑO (EDITABLES)
+    ==========================================================
+    */
+    :root{
+      --bg: #0b0b10;
+
+      /* Cards (glass) */
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.08);
+      --stroke: rgba(255,255,255,.14);
+
+      /* Text */
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --muted2: rgba(255,255,255,.55);
+
+      /* Brand */
+      --pink: #ff4fa6;
+      --pink2:#ff77c0;
+      --yellow: #ffd54a;
+      --yellow2:#ffe07a;
+
+      /* States */
+      --ok: #22c55e;
+      --bad:#ef4444;
+
+      /* Layout */
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(0,0,0,.55);
+      --shadow2: 0 18px 45px rgba(0,0,0,.35);
+      --container: 1180px;
+
+      /* Motion */
+      --ease: cubic-bezier(.2,.8,.2,1);
+    }
+
+    /*
+    ==========================================================
+    2) RESETEO BÁSICO
+    ==========================================================
+    */
+    *{ box-sizing: border-box; }
+    html, body{ height: 100%; }
+
+    body{
+      margin:0;
+      font-family: "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+
+      /* Fondo premium */
+      background:
+        radial-gradient(1200px 900px at 20% 10%, rgba(255,79,166,.22), transparent 55%),
+        radial-gradient(1000px 800px at 90% 25%, rgba(255,213,74,.20), transparent 55%),
+        radial-gradient(1200px 900px at 50% 100%, rgba(255,255,255,.05), transparent 60%),
+        var(--bg);
+
+      overflow-x: hidden;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    img{ max-width: 100%; display:block; }
+
+    /* Subtle grain */
+    body:before{
+      content:"";
+      position: fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.10;
+      mix-blend-mode: overlay;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+    }
+
+    /* Contenedor */
+    .container{ width: min(var(--container), calc(100% - 40px)); margin: 0 auto; }
+
+    /*
+    ==========================================================
+    3) HEADER / NAV (mejorado)
+    ==========================================================
+    */
+    header{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(10,10,16,.72), rgba(10,10,16,.35));
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 0;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 220px;
+    }
+
+    .brand-dot{
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--pink), var(--yellow));
+      box-shadow: 0 0 0 6px rgba(255,79,166,.12), 0 0 0 12px rgba(255,213,74,.08);
+    }
+
+    .brand-name{
+      font-weight: 900;
+      letter-spacing: .2px;
+      line-height: 1;
+    }
+
+    .brand-tag{
+      color: var(--muted2);
+      font-weight:700;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    /* Links desktop */
+    .nav-links{
+      display:flex;
+      align-items:center;
+      gap: 18px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .nav-links a{
+      opacity: .9;
+      transition: opacity .18s var(--ease), color .18s var(--ease);
+    }
+    .nav-links a:hover{ opacity: 1; color: #fff; }
+
+    /* CTA */
+    .nav-cta{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+
+    /*
+    ------------------------------
+    Botones (mejorados)
+    ------------------------------
+    */
+    .btn{
+      appearance:none;
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 900;
+      letter-spacing: .15px;
+      border-radius: 999px;
+      padding: 12px 16px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      transition: transform .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease), opacity .18s var(--ease);
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .btn svg{
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+    }
+
+    .btn:active{ transform: translateY(1px) scale(.99); }
+
+    .btn-primary{
+      background: linear-gradient(135deg, var(--pink), var(--yellow));
+      color: #111;
+      box-shadow: 0 18px 40px rgba(255,79,166,.18), 0 18px 40px rgba(255,213,74,.14);
+    }
+
+    .btn-primary:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 22px 60px rgba(255,79,166,.22), 0 22px 60px rgba(255,213,74,.18);
+    }
+
+    .btn-ghost{
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .btn-ghost:hover{ background: rgba(255,255,255,.10); }
+
+    /* Botón hamburguesa (solo móvil) */
+    .menu-btn{
+      display:none;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:#fff;
+      cursor:pointer;
+      place-items:center;
+      transition: background .18s var(--ease), transform .18s var(--ease);
+    }
+    .menu-btn:hover{ background: rgba(255,255,255,.10); }
+    .menu-btn:active{ transform: scale(.98); }
+
+    .menu-btn svg{ width: 20px; height: 20px; fill:#fff; }
+
+    /*
+    ------------------------------
+    Menú móvil (slide-down)
+    ------------------------------
+    */
+    .mobile-nav{
+      display:none;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding: 12px 0 16px;
+    }
+
+    .mobile-nav.open{ display:block; }
+
+    .mobile-links{
+      display:grid;
+      gap: 10px;
+      padding: 6px 0 14px;
+    }
+
+    .mobile-links a{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      color: rgba(255,255,255,.92);
+      font-weight: 900;
+      letter-spacing: -.1px;
+      transition: transform .18s var(--ease), background .18s var(--ease);
+    }
+
+    .mobile-links a:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.07);
+    }
+
+    .mobile-links a span{
+      color: rgba(255,255,255,.55);
+      font-weight: 900;
+    }
+
+    .mobile-cta{
+      display:grid;
+      gap: 10px;
+      padding-top: 10px;
+    }
+
+    /*
+    ==========================================================
+    4) HERO
+    ==========================================================
+    */
+    .hero{
+      padding: 54px 0 30px;
+      position: relative;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+      align-items: center;
+      text-align: center;
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .kicker b{ color: #fff; }
+
+    h1{
+      margin: 25px 0 25px;
+      font-size: clamp(34px, 4vw, 42px);
+      line-height: 1.02;
+      letter-spacing: -1px;
+    }
+
+    .lead{
+      margin: 0 0 25px;
+      color: var(--muted);
+      font-size: clamp(15px, 1.5vw, 18px);
+      line-height: 1.65;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items:center;
+      justify-content: center;
+      padding: 0;
+      margin-top: 18px;
+    }
+
+    .hero-badges{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+      justify-content: center;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    /*
+    ------------------------------
+    Logo hero (mejorado)
+    ------------------------------
+    */
+    .logo-wrap{
+      display:grid;
+      place-items: center;
+      padding: 26px;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow:hidden;
+      min-height: 360px;
+    }
+
+    /* Glow */
+    .logo-wrap:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 500px at 30% 20%, rgba(255,79,166,.25), transparent 55%),
+        radial-gradient(700px 500px at 70% 60%, rgba(255,213,74,.18), transparent 55%);
+      filter: blur(2px);
+      opacity: .9;
+    }
+
+    .logo-wrap:after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: radial-gradient(900px 600px at 50% 0%, rgba(255,255,255,.06), transparent 60%);
+      pointer-events:none;
+    }
+
+    .logo-inner{
+      position: relative;
+      z-index: 2;
+      width: min(360px, 78%);
+      aspect-ratio: 1/1;
+      display:grid;
+      place-items:center;
+    }
+
+    .logo-img{
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 18px 30px rgba(0,0,0,.45)) drop-shadow(0 0 24px rgba(255,79,166,.12));
+      transform-origin: 50% 8%;
+      animation: pinataSway 6s ease-in-out infinite;
+    }
+
+    /* Every ~3s a tiny “hit” shake */
+    .logo-img.hit{
+      animation: pinataSway 6s ease-in-out infinite, pinataHit 3s ease-in-out infinite;
+    }
+
+    @keyframes pinataSway{
+      0%, 100%{ transform: rotate(-1.6deg) translateY(0px); }
+      50%{ transform: rotate(1.8deg) translateY(-2px); }
+    }
+
+    @keyframes pinataHit{
+      0%{ transform: rotate(-1.6deg) translateY(0px); }
+      8%{ transform: rotate(3.4deg) translateY(-3px); }
+      16%{ transform: rotate(-2.8deg) translateY(2px); }
+      24%{ transform: rotate(1.6deg) translateY(-1px); }
+      32%{ transform: rotate(-1.2deg) translateY(0px); }
+      100%{ transform: rotate(-1.6deg) translateY(0px); }
+    }
+
+    .logo-hint{
+      position:absolute;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      z-index: 3;
+      color: var(--muted2);
+      font-weight: 800;
+      font-size: 13px;
+      text-align:center;
+    }
+
+    /*
+    ==========================================================
+    5) SECCIONES
+    ==========================================================
+    */
+    section{ padding: 44px 0; }
+
+    .section-title{
+      display:flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .section-title h2{
+      margin:0;
+      font-size: clamp(22px, 2.3vw, 32px);
+      letter-spacing: -.4px;
+      text-align:center;
+    }
+
+    .section-title p{
+      margin:0;
+      color: var(--muted);
+      font-weight: 650;
+      line-height: 1.55;
+      max-width: 720px;
+      text-align:center;
+    }
+
+    /*
+    ==========================================================
+    6) CARDS DE TAMAÑOS (mejoradas)
+    ==========================================================
+    */
+    .grid-3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card{
+      text-align: center;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow2);
+      padding: 18px;
+      position: relative;
+      overflow:hidden;
+      transition: transform .22s var(--ease), border-color .22s var(--ease), background .22s var(--ease);
+    }
+
+    /* Hover premium */
+    .card:hover{
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,.18);
+      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
+    }
+
+    .card:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      opacity: .55;
+      background:
+        radial-gradient(700px 500px at 15% 0%, rgba(255,79,166,.16), transparent 55%),
+        radial-gradient(700px 500px at 85% 40%, rgba(255,213,74,.12), transparent 55%);
+      pointer-events:none;
+    }
+
+    .card > *{ position: relative; z-index: 2; }
+
+    .size-row{
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .size-name{
+      font-weight: 950;
+      letter-spacing: -.3px;
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .size-sub{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-weight: 650;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .pinata-icon{
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+      display:grid;
+      place-items:center;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      margin-top: 4px;
+    }
+
+    .pinata-icon svg{ display:block; }
+
+    /*
+    Toggle (ver precios)
+    Mejorado:
+    - Hover
+    - Mejor foco (teclado)
+    */
+    .toggle{
+      margin-top: 14px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(0,0,0,.20);
+      border: 1px solid rgba(255,255,255,.10);
+      cursor: pointer;
+      user-select:none;
+      font-weight: 950;
+      color: #fff;
+      transition: background .18s var(--ease), transform .18s var(--ease);
+      outline: none;
+    }
+
+    .toggle:hover{
+      background: rgba(0,0,0,.28);
+      transform: translateY(-1px);
+    }
+
+    .toggle:focus-visible{
+      box-shadow: 0 0 0 4px rgba(255,213,74,.18);
+      border-color: rgba(255,213,74,.30);
+    }
+
+    .toggle span{ color: var(--muted); font-weight: 800; }
+
+    .price{
+      margin-top: 12px;
+      display:none;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      border: 1px dashed rgba(255,255,255,.16);
+      color: var(--muted);
+      font-weight: 650;
+      line-height: 1.6;
+    }
+
+    .card.open .price{ display:block; }
+
+    .note{
+      margin-top: 14px;
+      color: rgba(255,255,255,.70);
+      font-weight: 650;
+      line-height: 1.55;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      text-align: center;
+    }
+
+    .note b{ color: #fff; }
+
+    /*
+    ==========================================================
+    7) GALERÍA / MARQUEE (mejorada)
+    ==========================================================
+    */
+    .carousel-wrap{ display:grid; gap: 14px; }
+
+    .marquee{
+      position: relative;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+      padding: 12px 0;
+    }
+
+    /* Fade en los extremos (se ve MUY pro) */
+    .marquee:before,
+    .marquee:after{
+      content:"";
+      position:absolute;
+      top:0;
+      bottom:0;
+      width: 60px;
+      z-index: 5;
+      pointer-events:none;
+    }
+    .marquee:before{
+      left:0;
+      background: linear-gradient(to right, rgba(11,11,16,1), rgba(11,11,16,0));
+    }
+    .marquee:after{
+      right:0;
+      background: linear-gradient(to left, rgba(11,11,16,1), rgba(11,11,16,0));
+    }
+
+    .track{
+      display:flex;
+      gap: 14px;
+      width: max-content;
+      animation: scrollLeft 28s linear infinite;
+      will-change: transform;
+    }
+
+    /* Si el usuario pasa el mouse, pausamos (UX premium) */
+    .marquee:hover .track{ animation-play-state: paused; }
+
+    .marquee.right .track{ animation: scrollRight 32s linear infinite; }
+
+    @keyframes scrollLeft{
+      0%{ transform: translateX(0); }
+      100%{ transform: translateX(-50%); }
+    }
+
+    @keyframes scrollRight{
+      0%{ transform: translateX(-50%); }
+      100%{ transform: translateX(0); }
+    }
+
+    .shot{
+      width: 190px;
+      height: 120px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(255,79,166,.18), rgba(255,213,74,.14));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 14px 34px rgba(0,0,0,.30);
+      position: relative;
+      overflow:hidden;
+      display:grid;
+      place-items:center;
+      color: rgba(255,255,255,.86);
+      font-weight: 950;
+      letter-spacing: -.3px;
+      transform: translateZ(0);
+    }
+
+    .shot:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(600px 200px at 20% 20%, rgba(255,255,255,.16), transparent 60%);
+    }
+
+    .shot span{ position:relative; z-index: 2; }
+
+    /*
+    ==========================================================
+    8) FAQ
+    ==========================================================
+    */
+    .faq{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    details{
+      border-radius: 20px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 14px 16px;
+      transition: background .18s var(--ease), border-color .18s var(--ease), transform .18s var(--ease);
+    }
+
+    details:hover{
+      background: rgba(255,255,255,.06);
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.14);
+    }
+
+    summary{
+      cursor: pointer;
+      font-weight: 950;
+      letter-spacing: -.2px;
+      list-style:none;
+    }
+
+    summary::-webkit-details-marker{ display:none; }
+
+    details p{
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-weight: 650;
+      line-height: 1.6;
+    }
+
+    /*
+    ==========================================================
+    9) FOOTER (FIX: ahora dark premium, no blanco)
+    ==========================================================
+    */
+    .site-footer{
+      margin-top: 56px;
+      padding: 34px 0 28px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      background: rgba(10,10,16,.55);
+      backdrop-filter: blur(14px);
+    }
+
+    .footer-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 26px;
+      align-items:start;
+    }
+
+    .footer-col{
+      display:flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .footer-brand{
+      display:flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .footer-title{
+      font-weight: 950;
+      font-size: 18px;
+      letter-spacing: -.3px;
+    }
+
+    .footer-subtitle{
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .footer-socials{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /*
+    Redes:
+    - Ahora son pills (más pro)
+    - Íconos originales SVG (blancos)
+    */
+    .social-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+
+      transition: transform .18s var(--ease), background .18s var(--ease), opacity .18s var(--ease);
+      opacity: .92;
+    }
+
+    .social-btn svg{
+      width: 22px;
+      height: 22px;
+      fill: #fff;
+    }
+
+    .social-btn:hover{
+      opacity: 1;
+      transform: translateY(-2px);
+      background: rgba(255,255,255,.10);
+    }
+
+    .social-btn:active{
+      transform: translateY(0px) scale(.98);
+    }
+
+    .footer-copy{
+      color: rgba(255,255,255,.55);
+      font-weight: 650;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .footer-title-sm{
+      font-weight: 950;
+      letter-spacing: -.2px;
+      font-size: 15px;
+    }
+
+    .footer-links{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .footer-link{
+      width: 100%;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 16px;
+
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+
+      font-weight: 900;
+      color: #fff;
+      cursor: pointer;
+
+      transition: transform .18s var(--ease), background .18s var(--ease), opacity .18s var(--ease);
+      text-align: left;
+      opacity: .92;
+    }
+
+    .footer-link:hover{
+      opacity: 1;
+      transform: translateY(-2px);
+      background: rgba(255,255,255,.10);
+    }
+
+    .footer-link:active{
+      transform: translateY(0px) scale(.99);
+    }
+
+    .link-ico{
+      width: 18px;
+      height: 18px;
+      fill: #fff;
+      flex: 0 0 auto;
+    }
+
+    /*
+    ==========================================================
+    10) MODALES (mejorados)
+    ==========================================================
+    */
+    .modal{
+      position: fixed;
+      inset:0;
+      display:none;
+      place-items:center;
+      z-index: 100;
+      padding: 18px;
+      background: rgba(0,0,0,.62);
+      backdrop-filter: blur(10px);
+    }
+
+    .modal.open{ display:grid; }
+
+    .modal-card{
+      width: min(720px, 100%);
+      border-radius: 26px;
+      background: rgba(20,20,28,.86);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 40px 120px rgba(0,0,0,.65);
+      overflow:hidden;
+
+      /* Animación suave al abrir */
+      transform: translateY(8px) scale(.98);
+      opacity: .0;
+      transition: transform .18s var(--ease), opacity .18s var(--ease);
+    }
+
+    .modal.open .modal-card{
+      transform: translateY(0px) scale(1);
+      opacity: 1;
+    }
+
+    .modal-head{
+      padding: 18px 18px 14px;
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .modal-head h3{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: -.3px;
+    }
+
+    .modal-head p{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-weight: 650;
+      line-height: 1.45;
+      font-size: 13px;
+    }
+
+    .x{
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight: 950;
+      font-size: 18px;
+      transition: background .18s var(--ease), transform .18s var(--ease);
+    }
+
+    .x:hover{ background: rgba(255,255,255,.10); }
+    .x:active{ transform: scale(.98); }
+
+    /*
+    ==========================================================
+    11) FORM (mejor UX)
+    ==========================================================
+    */
+    form{
+      padding: 18px;
+      display:grid;
+      gap: 12px;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    label{
+      display:grid;
+      gap: 8px;
+      color: rgba(255,255,255,.82);
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    input, select, textarea{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color: #fff;
+      font-family: inherit;
+      font-weight: 650;
+      outline: none;
+      transition: border .18s var(--ease), transform .18s var(--ease), background .18s var(--ease);
+    }
+
+    input:focus, select:focus, textarea:focus{
+      border-color: rgba(255,213,74,.55);
+      background: rgba(0,0,0,.28);
+    }
+
+    textarea{ min-height: 92px; resize: vertical; }
+
+    /* Pequeño feedback si un input es inválido */
+    input:invalid, select:invalid, textarea:invalid{
+      box-shadow: none;
+    }
+
+    .form-actions{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+
+    .helper{
+      color: var(--muted2);
+      font-weight: 650;
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+
+    .success{
+      display:none;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(34,197,94,.12);
+      border: 1px solid rgba(34,197,94,.35);
+      color: rgba(255,255,255,.90);
+      font-weight: 900;
+      line-height: 1.45;
+    }
+
+    .success.show{ display:block; }
+
+    /*
+    ==========================================================
+    12) RESPONSIVE
+    ==========================================================
+    */
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns: 1fr; }
+
+      .logo-wrap{
+        min-height: 380px;
+        max-width: 760px;
+        margin: 0 auto;
+      }
+
+      .grid-3{ grid-template-columns: 1fr; }
+      .faq{ grid-template-columns: 1fr; }
+      .footer-grid{ grid-template-columns: 1fr; }
+      .form-grid{ grid-template-columns: 1fr; }
+
+      /* Ocultamos links desktop */
+      .nav-links{ display:none; }
+
+      /* Mostramos hamburguesa */
+      .menu-btn{ display:grid; }
+
+      /* CTA desktop se reduce un poco */
+      .nav-cta .btn-ghost{ display:none; }
+    }
+
+    @media (max-width: 520px){
+      .container{ width: min(var(--container), calc(100% - 28px)); }
+
+      .btn{
+        width: 100%;
+        justify-content:center;
+      }
+
+      .nav-cta{
+        gap: 8px;
+      }
+    }
+
+    /*
+    ==========================================================
+    13) REDUCED MOTION (accesibilidad)
+    ==========================================================
+    */
+    @media (prefers-reduced-motion: reduce){
+      .logo-img, .logo-img.hit, .track{ animation: none !important; }
+      .card, details, .btn, .modal-card{ transition: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!--
+  ==========================================================
+  HEADER
+  ==========================================================
+  -->
+  <header>
+    <div class="container">
+
+      <div class="nav">
+        <!-- Marca -->
+        <div class="brand">
+          <div class="brand-dot" aria-hidden="true"></div>
+          <div>
+            <div class="brand-name">Piñata Colada</div>
+            <div class="brand-tag">Piñatas personalizadas</div>
+          </div>
+        </div>
+
+        <!-- Links desktop -->
+        <nav class="nav-links" aria-label="Secciones">
+          <a href="#tamanos">Tamaños</a>
+          <a href="#galeria">Galería</a>
+          <a href="#faq">Preguntas</a>
+          <a href="#contacto">Cotizar</a>
+        </nav>
+
+        <!-- CTA -->
+        <div class="nav-cta">
+          <!-- En móvil este se oculta para no saturar -->
+          <button class="btn btn-ghost" id="btnWhats" type="button">
+            <!-- icon WhatsApp -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#fff" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20Zm4.6-5.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.4-.1-.6.1-.2.2-.7.7-.8.9-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.4c.1-.1.2-.3.3-.4.1-.1.1-.3 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.2.2-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.3 3.9.6.3 1.1.4 1.4.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5.2-1 .1-1.1-.1-.1-.3-.2-.5-.3Z"/>
+            </svg>
+            WhatsApp
+          </button>
+
+          <button class="btn btn-primary" id="btnCotizarTop" type="button">
+            <!-- icon spark -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Zm7 11l.9 3.2 3.1.8-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.8.9-3.2Z"/>
+            </svg>
+            Realizar cotización
+          </button>
+
+          <!-- Hamburguesa (móvil) -->
+          <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 7h16v2H4V7Zm0 8h16v2H4v-2Zm0-4h16v2H4v-2Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Menú móvil -->
+      <div class="mobile-nav" id="mobileNav" aria-label="Menú móvil">
+        <div class="mobile-links">
+          <a href="#tamanos">Tamaños <span>→</span></a>
+          <a href="#galeria">Galería <span>→</span></a>
+          <a href="#faq">Preguntas <span>→</span></a>
+          <a href="#contacto">Cotizar <span>→</span></a>
+        </div>
+
+        <div class="mobile-cta">
+          <button class="btn btn-ghost" id="btnWhatsMobile" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#fff" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20Zm4.6-5.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.4-.1-.6.1-.2.2-.7.7-.8.9-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.4c.1-.1.2-.3.3-.4.1-.1.1-.3 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.2.2-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.3 3.9.6.3 1.1.4 1.4.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5.2-1 .1-1.1-.1-.1-.3-.2-.5-.3Z"/>
+            </svg>
+            Escribir por WhatsApp
+          </button>
+
+          <button class="btn btn-primary" id="btnCotizarMobile" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Zm7 11l.9 3.2 3.1.8-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.8.9-3.2Z"/>
+            </svg>
+            Cotizar ahora
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!--
+  ==========================================================
+  MAIN
+  ==========================================================
+  -->
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+
+          <!-- LOGO ARRIBA -->
+          <div class="logo-wrap" aria-label="Logo Piñata Colada">
+            <div class="logo-inner">
+              <img class="logo-img hit" src="assets/logo.png" alt="Logo Piñata Colada" />
+            </div>
+            <div class="logo-hint">(Sutil movimiento tipo piñata, cada ~3s)</div>
+          </div>
+
+          <!-- TEXTO -->
+          <div>
+            <div class="kicker">✨ Hechas a mano • <b>Diseños únicos</b> • Entrega para tu evento</div>
+
+            <h1>Piñatas personalizadas que se roban el show 🎉</h1>
+
+            <p class="lead">
+              En <b>Piñata Colada</b> creamos piñatas con un acabado increíble, súper fotogénicas y listas para tu fiesta.
+              <br>
+              Elige tamaño, dinos la idea… y nosotros <b>hacemos la magia</b>.
+            </p>
+
+            <div class="hero-actions">
+              <button class="btn btn-primary" id="btnCotizarHero" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Z"/>
+                </svg>
+                Realizar cotización
+              </button>
+
+              <a class="btn btn-ghost" href="#galeria">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="#fff" d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Zm2 0v12h12V6H6Zm2 2h8v2H8V8Zm0 4h6v2H8v-2Z"/>
+                </svg>
+                Ver galería
+              </a>
+            </div>
+
+            <div class="hero-badges">
+              <div class="badge">💖 Personalizadas</div>
+              <div class="badge">🕒 Entregas por fecha</div>
+              <div class="badge">📍 Gto. y Ags</div>
+              <div class="badge">🧁 Temáticas: todo</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- TAMAÑOS -->
+    <section id="tamanos">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>Elige tu tamaño</h2>
+            <p>3 tamaños principales. Haz clic en cada uno para ver precios (puedes editarlos en el código).</p>
+          </div>
+        </div>
+
+        <div class="grid-3">
+
+          <!-- CHICA -->
+          <article class="card" data-size="Chica">
+            <div class="size-row">
+              <div>
+                <p class="size-name">Chica</p>
+                <p class="size-sub">Ideal para detalles, mini fiestas o mesa de dulces.</p>
+              </div>
+
+              <div class="pinata-icon" aria-hidden="true">
+                <svg width="40" height="40" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M32 7c9 0 16 6.7 16 15 0 6.7-4.5 12.4-10.8 14.4V55c0 1.7-1.4 3-3.2 3h-4c-1.8 0-3.2-1.3-3.2-3V36.4C20.5 34.4 16 28.7 16 22c0-8.3 7-15 16-15Z" stroke="rgba(255,255,255,.82)" stroke-width="3"/>
+                  <path d="M24 22h16" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M26 28h12" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="toggle" role="button" tabindex="0">
+              <div>Ver precios <span>(clic)</span></div>
+              <div>＋</div>
+            </div>
+
+            <div class="price">
+              <b>Desde:</b> $___ MXN<br>
+              <b>Incluye:</b> personalización básica, colores, listones.<br>
+              <b>Tiempo:</b> 3–5 días (según agenda).
+            </div>
+          </article>
+
+          <!-- MEDIANA -->
+          <article class="card" data-size="Mediana">
+            <div class="size-row">
+              <div>
+                <p class="size-name">Mediana</p>
+                <p class="size-sub">La más pedida. Perfecta para cumpleaños y sesiones de fotos.</p>
+              </div>
+
+              <div class="pinata-icon" aria-hidden="true">
+                <svg width="46" height="46" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M32 6c10.2 0 18.5 7.6 18.5 17 0 7.4-5 13.7-12.5 15.8V55c0 2-1.6 3.5-3.6 3.5h-4.8c-2 0-3.6-1.5-3.6-3.5V38.8C18.5 36.7 13.5 30.4 13.5 23 13.5 13.6 21.8 6 32 6Z" stroke="rgba(255,255,255,.86)" stroke-width="3"/>
+                  <path d="M22 23h20" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M24 30h16" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M26 36h12" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="toggle" role="button" tabindex="0">
+              <div>Ver precios <span>(clic)</span></div>
+              <div>＋</div>
+            </div>
+
+            <div class="price">
+              <b>Desde:</b> $___ MXN<br>
+              <b>Incluye:</b> personalización + detalles extra.<br>
+              <b>Tiempo:</b> 4–7 días (según complejidad).
+            </div>
+          </article>
+
+          <!-- GRANDE -->
+          <article class="card" data-size="Grande">
+            <div class="size-row">
+              <div>
+                <p class="size-name">Grande</p>
+                <p class="size-sub">Impacto total. Para eventos grandes, fotos y el momento WOW.</p>
+              </div>
+
+              <div class="pinata-icon" aria-hidden="true">
+                <svg width="52" height="52" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M32 5c11.4 0 20.5 8.3 20.5 18.5 0 8-5.6 14.9-14 17.2V55c0 2.2-1.8 4-4 4h-5c-2.2 0-4-1.8-4-4V40.7c-8.4-2.3-14-9.2-14-17.2C11.5 13.3 20.6 5 32 5Z" stroke="rgba(255,255,255,.90)" stroke-width="3"/>
+                  <path d="M20 23h24" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M22 31h20" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M24 39h16" stroke="rgba(255,255,255,.62)" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="toggle" role="button" tabindex="0">
+              <div>Ver precios <span>(clic)</span></div>
+              <div>＋</div>
+            </div>
+
+            <div class="price">
+              <b>Desde:</b> $___ MXN<br>
+              <b>Incluye:</b> diseño con alto detalle + volumen extra.<br>
+              <b>Tiempo:</b> 7–10 días (según agenda).
+            </div>
+          </article>
+
+        </div>
+
+        <div class="note">
+          <b>¿Quieres un diseño 100% personalizado?</b> No te preocupes 😄.
+          Escríbenos tu idea y con gusto te ayudamos a aterrizarla y cotizarla.
+        </div>
+      </div>
+    </section>
+
+    <!-- GALERÍA -->
+    <section id="galeria">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>Galería</h2>
+            <p>Ejemplos de estilos y temáticas. (Aquí puedes reemplazar por fotos reales.)</p>
+          </div>
+        </div>
+
+        <div class="carousel-wrap">
+          <div class="marquee">
+            <div class="track" id="trackLeft"></div>
+          </div>
+
+          <div class="marquee right">
+            <div class="track" id="trackRight"></div>
+          </div>
+        </div>
+
+        <div style="margin-top: 18px; display:flex; justify-content:center;">
+          <button class="btn btn-primary" id="btnCotizarMid" type="button">Realizar cotización</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>Preguntas frecuentes</h2>
+            <p>Lo más importante para que tu piñata quede perfecta y llegue a tiempo.</p>
+          </div>
+        </div>
+
+        <div class="faq">
+          <details>
+            <summary>¿Con cuánta anticipación debo pedir?</summary>
+            <p>Lo ideal es de 5 a 10 días. En temporadas altas puede variar, así que entre antes mejor.</p>
+          </details>
+
+          <details>
+            <summary>¿Hacen piñatas 100% personalizadas?</summary>
+            <p>Sí. Puedes elegir la opción “100% personalizada” en la cotización y describir tu idea.</p>
+          </details>
+
+          <details>
+            <summary>¿Se pueden hacer de cualquier temática?</summary>
+            <p>¡Claro! Personajes, deportes, películas, videojuegos, logos, nombres, etc.</p>
+          </details>
+
+          <details>
+            <summary>¿Qué incluye el precio?</summary>
+            <p>Incluye el diseño, materiales, armado y acabados. El relleno (dulces) se cotiza aparte si lo requieres.</p>
+          </details>
+
+          <details>
+            <summary>¿Entregan a domicilio?</summary>
+            <p>Podemos acordar punto de entrega o envío local. Depende de la zona y tamaño.</p>
+          </details>
+
+          <details>
+            <summary>¿Puedo pedir varias piñatas?</summary>
+            <p>Sí. En el formulario puedes detallar lo que necesitas y te contactamos para ajustar la cotización.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>¿List@ para cotizar?</h2>
+            <p>Te toma menos de 1 minuto. En cuanto nos llegue, te respondemos por WhatsApp.</p>
+          </div>
+        </div>
+
+        <div style="display:flex; gap: 12px; flex-wrap: wrap; justify-content:center;">
+          <button class="btn btn-primary" id="btnCotizarBottom" type="button">Realizar cotización</button>
+          <button class="btn btn-ghost" id="btnWhats2" type="button">Escribir por WhatsApp</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!--
+  ==========================================================
+  FOOTER
+  ==========================================================
+  -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+
+        <!-- Marca -->
+        <div class="footer-col">
+          <div class="footer-brand">
+            <div class="footer-title">Piñata Colada</div>
+            <div class="footer-subtitle">Piñatas personalizadas • Irapuato, Gto</div>
+          </div>
+
+          <div class="footer-socials">
+            <!-- FACEBOOK -->
+            <a class="social-btn" href="#" target="_blank" rel="noopener" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22 12.07C22 6.48 17.52 2 11.93 2S1.86 6.48 1.86 12.07c0 5.03 3.66 9.2 8.44 9.93v-7.03H7.76v-2.9h2.54V9.85c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.77l-.44 2.9h-2.33V22c4.78-.73 8.44-4.9 8.44-9.93Z"/>
+              </svg>
+            </a>
+
+            <!-- INSTAGRAM -->
+            <a class="social-btn" href="#" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Z"/>
+                <path d="M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/>
+                <path d="M17.5 6.4a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Z"/>
+              </svg>
+            </a>
+
+            <!-- TIKTOK -->
+            <a class="social-btn" href="#" target="_blank" rel="noopener" aria-label="TikTok">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M16.5 2h-2.9v13.2c0 1.6-1.3 2.8-2.8 2.8-1.6 0-2.8-1.3-2.8-2.8s1.3-2.8 2.8-2.8c.4 0 .8.1 1.1.2V9.1c-.4-.1-.8-.1-1.1-.1-3 0-5.4 2.4-5.4 5.4S7.8 20 10.8 20s5.4-2.4 5.4-5.4V7.7c1.1 1.2 2.6 2 4.3 2.2V7.1c-2.1-.3-3.7-2-4-4.1Z"/>
+              </svg>
+            </a>
+          </div>
+
+          <div class="footer-copy">
+            © <span id="year"></span> Piñata Colada. Todos los derechos reservados.
+          </div>
+        </div>
+
+        <!-- Legal -->
+        <div class="footer-col footer-legal">
+          <div class="footer-title-sm">Legal</div>
+
+          <div class="footer-links">
+            <button class="footer-link" id="btnTerms" type="button">
+              <svg class="link-ico" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm8 1.5V8h4.5L14 3.5ZM8 12h8v2H8v-2Zm0 4h8v2H8v-2Z"/>
+              </svg>
+              <span>Términos y condiciones</span>
+            </button>
+
+            <button class="footer-link" id="btnPrivacy" type="button">
+              <svg class="link-ico" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 1 1 6 0v3H9Z"/>
+              </svg>
+              <span>Aviso de privacidad</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!--
+  ==========================================================
+  MODAL: Cotización
+  ==========================================================
+  -->
+  <div class="modal" id="modalCot">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Formulario de cotización">
+      <div class="modal-head">
+        <div>
+          <h3>Realizar cotización</h3>
+          <p>Completa la información. Al enviar, se guardará en Google Sheets y se notificará por WhatsApp.</p>
+        </div>
+        <button class="x" id="closeCot" aria-label="Cerrar" type="button">×</button>
+      </div>
+
+      <form id="cotForm">
+        <div class="success" id="successBox">
+          Muchas gracias por tu solicitud, nos pondremos en contacto contigo 💖
+        </div>
+
+        <div class="form-grid">
+          <label>
+            Nombre del cliente
+            <input name="nombre" required placeholder="Ej. Ana López" autocomplete="name" />
+          </label>
+
+          <label>
+            Tipo de piñata
+            <select name="tamano" required>
+              <option value="">Selecciona…</option>
+              <option>Chica</option>
+              <option>Mediana</option>
+              <option>Grande</option>
+              <option>100% personalizada</option>
+            </select>
+          </label>
+
+          <label>
+            ¿De qué será tu piñata?
+            <input name="tema" required placeholder="Ej. Spiderman, Frozen, Futbol, etc." />
+          </label>
+
+          <label>
+            Fecha en que se necesita
+            <input type="date" name="fecha" required />
+          </label>
+
+          <label>
+            Tipo de evento
+            <input name="evento" required placeholder="Ej. Cumpleaños, bautizo, baby shower…" />
+          </label>
+
+          <label>
+            Teléfono (opcional)
+            <input name="telefono" placeholder="Ej. 4491234567" inputmode="numeric" autocomplete="tel" />
+          </label>
+        </div>
+
+        <label>
+          Detalles extra (opcional)
+          <textarea name="detalles" placeholder="Colores, nombre, número de años, referencias, etc."></textarea>
+        </label>
+
+        <div class="form-actions">
+          <div class="helper">
+            *Al enviar, se genera un folio automático tipo <b>COT-0001</b>.
+          </div>
+
+          <button class="btn btn-primary" type="submit" id="sendBtn">
+            Enviar solicitud
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!--
+  ==========================================================
+  MODAL: Legal
+  ==========================================================
+  -->
+  <div class="modal" id="modalLegal">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Contenido legal">
+      <div class="modal-head">
+        <div>
+          <h3 id="legalTitle">Legal</h3>
+          <p id="legalSubtitle">Información importante.</p>
+        </div>
+        <button class="x" id="closeLegal" aria-label="Cerrar" type="button">×</button>
+      </div>
+
+      <div style="padding: 18px; color: var(--muted); font-weight: 650; line-height: 1.7;">
+        <div id="legalBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*
+    ==========================================================
+    CONFIG (EDITA AQUÍ)
+    ==========================================================
+    */
+
+    // 1) WhatsApp del negocio
+    const WHATSAPP_NUMBER = "4465165882";
+
+    // 2) Web App URL de Google Apps Script
+    // Pega aquí tu URL (después de desplegar el script como Web App)
+    const APPS_SCRIPT_WEBAPP_URL = "";
+
+    // 3) Textos legales (editables)
+    const TERMS_HTML = `
+      <p><b>Términos y condiciones</b></p>
+      <p>Las cotizaciones están sujetas a disponibilidad de agenda, complejidad del diseño y fecha solicitada.</p>
+      <p>Para confirmar pedidos puede requerirse anticipo. Cambios de último momento pueden modificar el precio.</p>
+      <p>Las imágenes son ilustrativas. Se respetan referencias, pero pueden existir variaciones artesanales.</p>
+    `;
+
+    const PRIVACY_HTML = `
+      <p><b>Aviso de privacidad</b></p>
+      <p>La información enviada se utiliza únicamente para responder tu solicitud de cotización.</p>
+      <p>No compartimos tus datos con terceros. Puedes solicitar la eliminación de tu información en cualquier momento.</p>
+    `;
+
+    /*
+    ==========================================================
+    HELPERS
+    ==========================================================
+    */
+    const $ = (q, el=document) => el.querySelector(q);
+    const $$ = (q, el=document) => Array.from(el.querySelectorAll(q));
+
+    function formatDateISOToMX(iso){
+      if(!iso) return "";
+      const [y,m,d] = iso.split("-");
+      return `${d}/${m}/${y}`;
+    }
+
+    function openWhatsApp(message){
+      const text = encodeURIComponent(message);
+      const url = `https://wa.me/52${WHATSAPP_NUMBER}?text=${text}`;
+      window.open(url, "_blank", "noopener");
+    }
+
+    /*
+    ==========================================================
+    MODALES (mejorados)
+    - Scroll lock real
+    - Guardamos foco para devolverlo
+    ==========================================================
+    */
+    let lastFocusedEl = null;
+
+    function openModal(id){
+      const m = $(id);
+      if(!m) return;
+
+      lastFocusedEl = document.activeElement;
+
+      m.classList.add("open");
+      document.body.style.overflow = "hidden";
+
+      // Enfocamos el primer input si existe (UX pro)
+      const firstInput = m.querySelector("input, select, textarea, button");
+      if(firstInput) firstInput.focus();
+    }
+
+    function closeModal(id){
+      const m = $(id);
+      if(!m) return;
+
+      m.classList.remove("open");
+      document.body.style.overflow = "";
+
+      // Devolvemos el foco al elemento que abrió el modal
+      if(lastFocusedEl && typeof lastFocusedEl.focus === "function"){
+        lastFocusedEl.focus();
+      }
+    }
+
+    /*
+    ==========================================================
+    UI INIT
+    ==========================================================
+    */
+
+    // Year
+    $("#year").textContent = new Date().getFullYear();
+
+    /*
+    ------------------------------
+    Toggle cards (precios)
+    ------------------------------
+    */
+    $$(".card").forEach(card => {
+      const toggle = card.querySelector(".toggle");
+      const plus = toggle.querySelector("div:last-child");
+
+      const setState = (open) => {
+        card.classList.toggle("open", open);
+        plus.textContent = open ? "−" : "＋";
+      };
+
+      toggle.addEventListener("click", () => setState(!card.classList.contains("open")));
+
+      // Accesibilidad: Enter / Space
+      toggle.addEventListener("keydown", (e) => {
+        if(e.key === "Enter" || e.key === " "){
+          e.preventDefault();
+          setState(!card.classList.contains("open"));
+        }
+      });
+    });
+
+    /*
+    ------------------------------
+    Galería (marquee)
+    ------------------------------
+    */
+    const left = $("#trackLeft");
+    const right = $("#trackRight");
+
+    const shots = [
+      "Unicornio", "Mario", "Spiderman", "Frozen", "Barbie", "Stitch",
+      "Pokémon", "Minnie", "Sonic", "Dragon Ball", "Kuromi", "Among Us"
+    ];
+
+    function buildMarquee(track){
+      // Duplicamos para scroll infinito real
+      const items = [...shots, ...shots];
+      track.innerHTML = items.map(t => `<div class="shot"><span>${t}</span></div>`).join("");
+    }
+
+    buildMarquee(left);
+    buildMarquee(right);
+
+    /*
+    ------------------------------
+    CTA buttons (abrir modal cotización)
+    ------------------------------
+    */
+    ["#btnCotizarTop", "#btnCotizarHero", "#btnCotizarMid", "#btnCotizarBottom", "#btnCotizarMobile"].forEach(id => {
+      const el = $(id);
+      if(el) el.addEventListener("click", () => openModal("#modalCot"));
+    });
+
+    /*
+    ------------------------------
+    WhatsApp buttons
+    ------------------------------
+    */
+    function waInfo(){
+      openWhatsApp("Hola 😊 Me gustaría información sobre piñatas personalizadas.");
+    }
+
+    function waCotizar(){
+      openWhatsApp("Hola 😊 Me gustaría cotizar una piñata.");
+    }
+
+    $("#btnWhats").addEventListener("click", waInfo);
+    $("#btnWhats2").addEventListener("click", waCotizar);
+    $("#btnWhatsMobile").addEventListener("click", waInfo);
+
+    /*
+    ------------------------------
+    Modal legal
+    ------------------------------
+    */
+    function openLegal(title, subtitle, html){
+      $("#legalTitle").textContent = title;
+      $("#legalSubtitle").textContent = subtitle;
+      $("#legalBody").innerHTML = html;
+      openModal("#modalLegal");
+    }
+
+    $("#btnTerms").addEventListener("click", (e) => {
+      e.preventDefault();
+      openLegal("Términos y condiciones", "Información sobre pedidos y cotizaciones.", TERMS_HTML);
+    });
+
+    $("#btnPrivacy").addEventListener("click", (e) => {
+      e.preventDefault();
+      openLegal("Aviso de privacidad", "Cómo usamos tu información.", PRIVACY_HTML);
+    });
+
+    /*
+    ------------------------------
+    Cerrar modales
+    ------------------------------
+    */
+    $("#closeCot").addEventListener("click", () => closeModal("#modalCot"));
+    $("#closeLegal").addEventListener("click", () => closeModal("#modalLegal"));
+
+    // Cerrar clic afuera
+    ["#modalCot", "#modalLegal"].forEach(id => {
+      $(id).addEventListener("click", (e) => {
+        if(e.target === $(id)) closeModal(id);
+      });
+    });
+
+    // Cerrar ESC
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape"){
+        closeModal("#modalCot");
+        closeModal("#modalLegal");
+      }
+    });
+
+    /*
+    ==========================================================
+    MENÚ MÓVIL
+    ==========================================================
+    */
+    const menuBtn = $("#menuBtn");
+    const mobileNav = $("#mobileNav");
+
+    function toggleMobileMenu(){
+      const isOpen = mobileNav.classList.contains("open");
+      mobileNav.classList.toggle("open", !isOpen);
+
+      // Cambia aria-label para accesibilidad
+      menuBtn.setAttribute("aria-label", isOpen ? "Abrir menú" : "Cerrar menú");
+    }
+
+    menuBtn.addEventListener("click", toggleMobileMenu);
+
+    // Cuando el usuario toca un link del menú móvil, lo cerramos
+    $$("#mobileNav a").forEach(a => {
+      a.addEventListener("click", () => {
+        mobileNav.classList.remove("open");
+        menuBtn.setAttribute("aria-label", "Abrir menú");
+      });
+    });
+
+    /*
+    ==========================================================
+    SUBMIT: Google Sheets + WhatsApp
+    ==========================================================
+    */
+    const form = $("#cotForm");
+    const sendBtn = $("#sendBtn");
+    const successBox = $("#successBox");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      successBox.classList.remove("show");
+
+      // Tomamos datos del form
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      // Mensaje WhatsApp
+      const waMsg =
+`Hola 👋 Soy ${data.nombre}.
+
+Quiero cotizar una piñata:
+• Tamaño: ${data.tamano}
+• Tema: ${data.tema}
+• Fecha: ${formatDateISOToMX(data.fecha)}
+• Evento: ${data.evento}
+• Teléfono: ${data.telefono || "(no indicado)"}
+• Detalles: ${data.detalles || "(sin detalles extra)"}
+
+¿Me ayudan por favor? 💖`;
+
+      // UI lock
+      sendBtn.disabled = true;
+      sendBtn.style.opacity = .75;
+      sendBtn.textContent = "Enviando…";
+
+      // 1) Guardar en Google Sheets (si hay URL configurada)
+      let folio = "";
+
+      try{
+        if(APPS_SCRIPT_WEBAPP_URL){
+          const res = await fetch(APPS_SCRIPT_WEBAPP_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              nombre: data.nombre,
+              tamano: data.tamano,
+              tema: data.tema,
+              fecha: data.fecha,
+              evento: data.evento,
+              telefono: data.telefono || "",
+              detalles: data.detalles || ""
+            })
+          });
+
+          const json = await res.json();
+
+          if(json && json.ok){
+            folio = json.folio || "";
+          }
+        }
+      }catch(err){
+        // No rompemos UX
+        console.warn("No se pudo guardar en Sheets:", err);
+      }
+
+      // 2) Abrir WhatsApp (con folio si se generó)
+      const finalMsg = folio ? `${waMsg}\n\nFolio: ${folio}` : waMsg;
+      openWhatsApp(finalMsg);
+
+      // Success UI
+      successBox.classList.add("show");
+      sendBtn.textContent = "Enviado ✓";
+
+      // Si quieres resetear el form, descomenta:
+      // form.reset();
+    });
+  </script>
+
+</body>
+</html>
