@@ -137,12 +137,13 @@ NOTA:
       padding: 14px 0;
     }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      min-width: 220px;
-    }
+.brand{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  min-width: 0; /* ✅ IMPORTANTÍSIMO */
+}
+
 
     .brand-dot{
       width: 12px;
@@ -1131,20 +1132,67 @@ NOTA:
 
       /* CTA desktop se reduce un poco */
       .nav-cta .btn-ghost{ display:none; }
+
+        .nav{
+    display:grid;
+    grid-template-columns: 1fr auto auto;
+    align-items:center;
+    gap: 10px;
+  }
+
+  .brand{
+    min-width: 0;
+  }
+
+  .brand-name{
+    font-size: 14px;
+  }
+
+  .brand-tag{
+    font-size: 11px;
+  }
+
+  /* el CTA ya no debe crecer infinito */
+  .nav-cta{
+    justify-self: end;
+    gap: 8px;
+  }
+
+  /* el botón NO debe ocupar 100% dentro del header */
+  .nav-cta .btn{
+    width: auto !important;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .menu-btn{
+    justify-self: end;
+    width: 44px;
+    height: 44px;
+  }
     }
 
-    @media (max-width: 520px){
-      .container{ width: min(var(--container), calc(100% - 28px)); }
+@media (max-width: 520px){
 
-      .btn{
-        width: 100%;
-        justify-content:center;
-      }
+  .container{
+    width: min(var(--container), calc(100% - 22px));
+  }
 
-      .nav-cta{
-        gap: 8px;
-      }
-    }
+  /* SOLO botones fuera del header se vuelven full */
+  main .btn,
+  section .btn,
+  .hero .btn{
+    width: 100%;
+    justify-content:center;
+  }
+
+  /* PERO los del header NO */
+  header .btn{
+    width: auto !important;
+  }
+}
+    
+
 
     /*
     ==========================================================
@@ -1629,13 +1677,13 @@ NOTA:
 
           <label>
             Teléfono (opcional)
-            <input name="telefono" placeholder="Ej. 4491234567" inputmode="numeric" autocomplete="tel" />
+            <input name="telefono" required placeholder="Ej. 4491234567" inputmode="numeric" autocomplete="tel" />
           </label>
         </div>
 
         <label>
           Detalles extra (opcional)
-          <textarea name="detalles" placeholder="Colores, Tempática, Referencias, etc."></textarea>
+          <textarea name="detalles" required placeholder="Colores, Tempática, Referencias, etc."></textarea>
         </label>
 
         <div class="form-actions">
@@ -1937,32 +1985,101 @@ document.addEventListener("keydown", (e) => {
    8) FORMULARIO DE COTIZACIÓN (AQUÍ ESTÁ LA MAGIA)
    ========================================================== */
 
-const quoteForm = $("#quoteForm");          // ✅ CORREGIDO
-const successMsg = $("#successMsg");      // ✅ CORREGIDO
-const submitBtn = $("#sendBtn");
+const quoteForm  = $("#quoteForm");
+const successMsg = $("#successMsg");
+const submitBtn  = $("#sendBtn");
+
+// Inputs directos (para validación + formato)
+const inputNombre   = quoteForm?.querySelector('[name="nombre"]');
+const inputTelefono = quoteForm?.querySelector('[name="telefono"]');
+
+
+
+/* ==========================================================
+   8.1) Nombre automático en MAYÚSCULAS
+   ========================================================== */
+
+if(inputNombre){
+  inputNombre.addEventListener("input", () => {
+    // Convierte a mayúsculas mientras escribe
+    inputNombre.value = inputNombre.value.toUpperCase();
+  });
+}
+
+
+
+/* ==========================================================
+   8.2) Teléfono SOLO 10 dígitos
+   - Borra cualquier letra o símbolo
+   - Limita a 10
+   ========================================================== */
+
+if(inputTelefono){
+
+  // Sugerencias para móvil
+  inputTelefono.setAttribute("inputmode", "numeric");
+  inputTelefono.setAttribute("autocomplete", "tel");
+  inputTelefono.setAttribute("maxlength", "10");
+
+  inputTelefono.addEventListener("input", () => {
+    // Solo números
+    let digits = inputTelefono.value.replace(/\D/g, "");
+
+    // Limitar a 10
+    digits = digits.slice(0, 10);
+
+    inputTelefono.value = digits;
+  });
+}
+
+
+
+/* ==========================================================
+   8.3) Envío + Validación completa
+   ========================================================== */
 
 if(quoteForm){
 
   quoteForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // 0) Validación: URL
     if(!APPS_SCRIPT_WEBAPP_URL){
       alert("⚠️ Falta configurar la URL del WebApp de Apps Script.");
       return;
     }
 
+    // 1) Obtener datos del form
     const formData = new FormData(quoteForm);
 
+    // 2) Payload (con nombre ya en mayúsculas)
     const payload = {
-      nombre: formData.get("nombre")?.trim() || "",
-      tamano: formData.get("tamano") || "",
-      tema: formData.get("tema")?.trim() || "",
-      fecha: formData.get("fecha") || "",
-      evento: formData.get("evento") || "",
-      telefono: formData.get("telefono")?.trim() || "",
-      detalles: formData.get("detalles")?.trim() || ""
+      nombre: (formData.get("nombre") || "").trim().toUpperCase(),
+      tamano: (formData.get("tamano") || "").trim(),
+      tema: (formData.get("tema") || "").trim(),
+      fecha: (formData.get("fecha") || "").trim(),
+      evento: (formData.get("evento") || "").trim(),
+      telefono: (formData.get("telefono") || "").trim(),
+      detalles: (formData.get("detalles") || "").trim()
     };
 
+    // 3) Validación: TODOS obligatorios
+    // (Esto asegura que aunque no tengan required en HTML, igual se valida)
+    for(const key in payload){
+      if(!payload[key]){
+        alert("⚠️ Por favor llena TODOS los campos antes de enviar.");
+        return;
+      }
+    }
+
+    // 4) Validación: teléfono exactamente 10 dígitos
+    if(!/^\d{10}$/.test(payload.telefono)){
+      alert("⚠️ El teléfono debe tener exactamente 10 dígitos.");
+      inputTelefono?.focus();
+      return;
+    }
+
+    // 5) UX: bloquear botón mientras envía
     if(submitBtn){
       submitBtn.disabled = true;
       submitBtn.style.opacity = ".65";
@@ -1971,49 +2088,56 @@ if(quoteForm){
 
     if(successMsg) successMsg.classList.remove("show");
 
-try{
-  const params = new URLSearchParams(payload);
+    try{
 
-  const res = await fetch(APPS_SCRIPT_WEBAPP_URL, {
-    method: "POST",
-    body: params
-  });
+      // 6) Enviar a Apps Script (URLSearchParams)
+      const params = new URLSearchParams(payload);
 
-  const text = await res.text();
-  console.log("RAW:", text);
+      const res = await fetch(APPS_SCRIPT_WEBAPP_URL, {
+        method: "POST",
+        body: params
+      });
 
-  let data;
-  try{
-    data = JSON.parse(text);
-  }catch(e){
-    throw new Error("Apps Script devolvió algo que NO es JSON.");
-  }
+      const text = await res.text();
+      console.log("RAW:", text);
 
-  if(!data.ok){
-    throw new Error(data.error || "Error desconocido");
-  }
+      let data;
+      try{
+        data = JSON.parse(text);
+      }catch(e){
+        throw new Error("Apps Script devolvió algo que NO es JSON.");
+      }
 
-  // Éxito
-  if(successMsg){
-    successMsg.innerHTML = `
-      ✅ ¡Gracias! Recibimos tu cotización.<br>
-      <span style="opacity:.85">Tu folio es: <b>${data.folio}</b></span><br>
-      <span style="opacity:.75">Nos pondremos en contacto contigo muy pronto.</span>
-    `;
-    successMsg.classList.add("show");
-  }
+      if(!data.ok){
+        throw new Error(data.error || "Error desconocido");
+      }
 
-  quoteForm.reset();
+      // 7) Éxito
+      if(successMsg){
+        successMsg.innerHTML = `
+          ✅ ¡Gracias! Recibimos tu cotización.<br>
+          <span style="opacity:.85">Tu folio es: <b>${data.folio}</b></span><br>
+          <span style="opacity:.75">Nos pondremos en contacto contigo muy pronto.</span>
+        `;
+        successMsg.classList.add("show");
+      }
 
-  setTimeout(() => {
-    closeModal("modalCot");
-    if(successMsg) successMsg.classList.remove("show");
-  }, AUTO_CLOSE_MS);
+      // 8) Limpia
+      quoteForm.reset();
 
-}catch(err){
-  alert("❌ No se pudo enviar tu cotización.\n\n" + err.message);
-}
-finally{
+      // 9) Cierra modal
+      setTimeout(() => {
+        closeModal("modalCot");
+        if(successMsg) successMsg.classList.remove("show");
+      }, AUTO_CLOSE_MS);
+
+    }catch(err){
+
+      alert("❌ No se pudo enviar tu cotización.\n\n" + err.message);
+
+    }finally{
+
+      // 10) Rehabilitar botón
       if(submitBtn){
         submitBtn.disabled = false;
         submitBtn.style.opacity = "";
