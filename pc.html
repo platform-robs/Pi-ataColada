@@ -885,13 +885,30 @@ NOTA:
       margin-top: 6px;
     }
 
+    .link-ico{
+      width: 18px;
+      height: 18px;
+      fill: #fff;
+      flex: 0 0 auto;
+      opacity: .95;
+    }
+
+    .footer-link span{
+  white-space: nowrap;     /* ✅ evita salto */
+}
+
+
 .footer-link{
   width: 100%;
+  max-width: 360px;              /* ✅ evita que se hagan gigantes */
+  margin: 0 auto;                /* ✅ los centra */
+  
   display:flex;
   align-items:center;
-  justify-content: center; /* ✅ centra el contenido */
+  justify-content:center;        /* ✅ centra texto dentro */
   gap: 10px;
-  padding: 12px 14px;
+
+  padding: 12px 16px;            /* ✅ más delgado */
   border-radius: 16px;
 
   background: rgba(255,255,255,.06);
@@ -903,8 +920,12 @@ NOTA:
 
   transition: transform .18s var(--ease), background .18s var(--ease), opacity .18s var(--ease);
   opacity: .92;
+
   text-align: center;
+  line-height: 1.1;              /* ✅ evita altura extra */
+  min-height: 48px;              /* ✅ alto consistente */
 }
+
 
 
     .footer-link:hover{
