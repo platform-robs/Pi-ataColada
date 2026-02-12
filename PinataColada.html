@@ -206,7 +206,9 @@
       flex-wrap: wrap;
       gap: 12px;
       align-items:center;
-      padding: 20px;
+      justify-content: center;
+      padding: 0;
+      margin-top: 18px;
     }
 
     .hero-badges{
@@ -214,6 +216,7 @@
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 16px;
+      justify-content: center;
     }
 
     .badge{
@@ -315,24 +318,28 @@
 
     .section-title{
       display:flex;
-      align-items:flex-end;
-      justify-content: space-between;
-      gap: 16px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       margin-bottom: 18px;
+      text-align: center;
     }
-
+    
     .section-title h2{
       margin:0;
       font-size: clamp(22px, 2.3vw, 32px);
       letter-spacing: -.4px;
+      text-align:center;
     }
-
+    
     .section-title p{
       margin:0;
       color: var(--muted);
       font-weight: 600;
       line-height: 1.5;
-      max-width: 520px;
+      max-width: 720px;
+      text-align:center;
     }
 
     /* Cards */
@@ -343,6 +350,7 @@
     }
 
     .card{
+      text-align: center;
       border-radius: var(--radius);
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
       border: 1px solid rgba(255,255,255,.12);
@@ -350,6 +358,14 @@
       padding: 18px;
       position: relative;
       overflow:hidden;
+    }
+
+    .size-row{
+      display:flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
     }
 
     .card:before{
@@ -395,6 +411,7 @@
       place-items:center;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
+      margin-top: 4px;
     }
 
     .pinata-icon svg{ display:block; }
@@ -440,6 +457,7 @@
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.03);
+      text-align: center;
     }
 
     .note b{ color: #fff; }
@@ -540,12 +558,20 @@
 
     .footer-grid{
       display:grid;
-      grid-template-columns: 1.2fr .8fr;
+      grid-template-columns: 1fr;
       gap: 18px;
       align-items:start;
+      text-align: center;
     }
 
-    .socials{ display:flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+
+    .socials{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+      justify-content: center;
+    }
 
     .pill{
       display:inline-flex;
@@ -964,7 +990,7 @@
           </div>
         </div>
 
-        <div style="display:flex; gap: 12px; flex-wrap: wrap;">
+        <div style="display:flex; gap: 12px; flex-wrap: wrap; justify-content:center;">
           <button class="btn btn-primary" id="btnCotizarBottom">Realizar cotización</button>
           <button class="btn btn-ghost" id="btnWhats2">Escribir por WhatsApp</button>
         </div>
