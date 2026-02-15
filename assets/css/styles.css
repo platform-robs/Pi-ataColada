@@ -304,6 +304,7 @@ section{
 .section-title h2{
   margin:0;
   font-size: clamp(24px, 3vw, 34px);
+  text-align: center;
 }
 
 .section-title p{
@@ -311,6 +312,7 @@ section{
   color: var(--muted);
   font-weight:650;
   line-height:1.6;
+  text-align: center;
 }
 
 /* highlight para títulos */
@@ -356,6 +358,7 @@ section{
   margin:0;
   font-size: 20px;
   font-weight: 950;
+  text-align: center;
 }
 
 .size-sub{
@@ -363,6 +366,7 @@ section{
   color: var(--muted);
   font-weight:650;
   line-height:1.55;
+  text-align: center;
 }
 
 .price{
