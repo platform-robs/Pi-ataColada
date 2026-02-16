@@ -680,10 +680,9 @@ textarea{ min-height: 130px; resize: vertical; }
   /* El header se vuelve grid: logo | espacio | menú */
   .nav{
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr auto auto;
     align-items: center;
-    gap: 12px;
-    justify-items: end;
+    gap: 10px;
   }
 
   /* Ocultamos links normales (ya lo haces, pero lo reforzamos) */
