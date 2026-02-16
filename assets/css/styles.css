@@ -163,14 +163,14 @@ header{
 }
 
 .mobile-links a{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:14px 16px;
-  border-radius:18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 18px;
   border: var(--border);
-  background: rgba(255,255,255,.05);
-  font-weight:900;
+  background: rgba(255, 255, 255, .05);
+  font-weight: 900;
 }
 
 .mobile-cta{
@@ -683,6 +683,7 @@ textarea{ min-height: 130px; resize: vertical; }
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 12px;
+    justify-items: end;
   }
 
   /* Ocultamos links normales (ya lo haces, pero lo reforzamos) */
