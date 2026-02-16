@@ -552,9 +552,10 @@
       const csv = await res.text();
       const map = parseCSV(csv);
 
-      setCardPrice("S — Sutil", map[norm("S — Sutil")] || map[norm("S - Sutil")] || map[norm("S")]);
-      setCardPrice("M — Colada", map[norm("M — Colada")] || map[norm("M - Colada")] || map[norm("M")]);
-      setCardPrice("L — Epica", map[norm("L — Epica")] || map[norm("L - Epica")] || map[norm("L")]);
+      setCardPrice("Chica", map[norm("Chica")]);
+      setCardPrice("Estándar", map[norm("Estándar")] || map[norm("Estandar")]);
+      setCardPrice("Premium", map[norm("Premium")]);
+      setCardPrice("Diseño exclusivo", "Depende del diseño");
 
       // diseño a medida
       setCardPrice("diseno a tu tematica", "depende del diseno");
