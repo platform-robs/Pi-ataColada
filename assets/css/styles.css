@@ -730,3 +730,47 @@ textarea{ min-height: 130px; resize: vertical; }
   }
 }
 
+/* ==========================================================
+   FIX DEFINITIVO: menú hamburguesa siempre visible en móvil
+   ========================================================== */
+
+@media (max-width: 980px){
+
+  /* Layout del header */
+  .nav{
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Links desktop fuera */
+  .nav-links{
+    display: none !important;
+  }
+
+  /* CTA fuera (se pasan al menú) */
+  .nav-cta{
+    display: none !important;
+  }
+
+  /* Botón hamburguesa SIEMPRE visible */
+  .menu-btn{
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 16px;
+    flex: 0 0 auto;
+  }
+
+  /* Menú móvil */
+  .mobile-nav{
+    display: none;
+  }
+  .mobile-nav.show{
+    display: block;
+  }
+}
+
