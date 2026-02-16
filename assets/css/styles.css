@@ -580,6 +580,8 @@ textarea{ min-height: 130px; resize: vertical; }
   text-align: left;
   font-weight: 900;
   justify-content: center;
+  color: lightsteelblue;
+
 }
 .footer-link:hover{ background: rgba(255,255,255,.08); }
 
