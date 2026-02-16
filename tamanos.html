@@ -444,80 +444,87 @@
   <script src="assets/js/main.js"></script>
 
   <!-- Script específico para leer precios desde Google Sheets -->
-  <script>
-    /**
-     * IMPORTANTE:
-     * Para que esto funcione sin backend, necesitas publicar tu Sheet como:
-     * Archivo -> Compartir -> Publicar en la web
-     *
-     * Y usar el endpoint "gviz".
-     */
+<script>
+  const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRU7DUJ_4b7T-lJqct_fgxJ_dpYtrVC1XyjVnS2Udhj8ojp8ebicmeFb_hZ7Wok6P_FEInudggQOd29/pub?gid=915218915&single=true&output=csv";
 
-    const SHEET_ID = "1YoPCt6VqYuF0F0d7IG2NWtHHiNpW3R0DQOZ1Dmz2udM";
-    const GID = "915218915";
+  function moneyMXN(value){
+    if (!value) return "—";
+    const s = String(value).trim();
 
-    const GVIZ_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRU7DUJ_4b7T-lJqct_fgxJ_dpYtrVC1XyjVnS2Udhj8ojp8ebicmeFb_hZ7Wok6P_FEInudggQOd29/gviz/tq?gid=915218915&tqx=out:json";
+    // Si no es número (ej: "depende de los requerimientos")
+    if (isNaN(Number(s))) return s;
 
-    function moneyMXN(value){
-      // Si dice "depende..." lo mostramos tal cual
-      if (!value) return "—";
-      const s = String(value).trim();
-      if (isNaN(Number(s))) return s;
+    return "$" + Number(s).toLocaleString("es-MX");
+  }
 
-      return "$" + Number(s).toLocaleString("es-MX");
+  function setCardPrice(tipo, precio){
+    const card = document.querySelector(`.size-card[data-tipo="${tipo}"]`);
+    if (!card) return;
+
+    const el = card.querySelector(".price-value");
+    if (!el) return;
+
+    el.classList.remove("loading-price", "error-price");
+    el.textContent = moneyMXN(precio);
+  }
+
+  function setErrorAll(){
+    document.querySelectorAll(".price-value").forEach(el => {
+      el.classList.remove("loading-price");
+      el.classList.add("error-price");
+      el.textContent = "No disponible";
+    });
+  }
+
+  // Normaliza texto para que no fallen acentos/espacios
+  function norm(s){
+    return String(s || "")
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function parseCSV(text){
+    // CSV simple (2 columnas). Esto es suficiente para tu tabla.
+    const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
+
+    // Quita encabezado
+    lines.shift();
+
+    const map = {};
+    lines.forEach(line => {
+      const parts = line.split(",");
+      const tipo = parts[0]?.trim();
+      const precio = parts.slice(1).join(",").trim(); // por si el texto tiene comas
+
+      if(tipo) map[norm(tipo)] = precio;
+    });
+
+    return map;
+  }
+
+  async function loadPrices(){
+    try{
+      const res = await fetch(CSV_URL);
+      const csv = await res.text();
+
+      const map = parseCSV(csv);
+
+      setCardPrice("Chica", map[norm("Chica")]);
+      setCardPrice("Estándar", map[norm("Estándar")]);
+      setCardPrice("Premium", map[norm("Premium")]);
+      setCardPrice("Diseño exclusivo", map[norm("Diseño exclusivo")]);
+
+    }catch(e){
+      console.error("Error cargando precios:", e);
+      setErrorAll();
     }
+  }
 
-    function setCardPrice(tipo, precio){
-      const card = document.querySelector(`.size-card[data-tipo="${tipo}"]`);
-      if (!card) return;
+  loadPrices();
+</script>
 
-      const el = card.querySelector(".price-value");
-      if (!el) return;
-
-      el.classList.remove("loading-price", "error-price");
-      el.textContent = moneyMXN(precio);
-    }
-
-    function setErrorAll(){
-      document.querySelectorAll(".price-value").forEach(el => {
-        el.classList.remove("loading-price");
-        el.classList.add("error-price");
-        el.textContent = "No disponible";
-      });
-    }
-
-    async function loadPrices(){
-      try{
-        const res = await fetch(GVIZ_URL);
-        const text = await res.text();
-
-        // Google devuelve algo tipo: google.visualization.Query.setResponse({...});
-        const json = JSON.parse(text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1));
-
-        const rows = json.table.rows || [];
-
-        // Convertimos tabla a objeto: {tipo: precio}
-        const map = {};
-        rows.forEach(r => {
-          const tipo = r.c?.[0]?.v;
-          const precio = r.c?.[1]?.v;
-          if(tipo) map[String(tipo).trim()] = precio;
-        });
-
-        // Aplicar precios
-        setCardPrice("Chica", map["Chica"]);
-        setCardPrice("Estándar", map["Estándar"]);
-        setCardPrice("Premium", map["Premium"]);
-        setCardPrice("Diseño exclusivo", map["Diseño exclusivo"]);
-
-      }catch(e){
-        console.error("Error cargando precios:", e);
-        setErrorAll();
-      }
-    }
-
-    loadPrices();
-  </script>
 
 </body>
 </html>
