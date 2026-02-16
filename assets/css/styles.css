@@ -96,8 +96,17 @@ header{
   border: var(--border);
   background: rgba(255,255,255,.05);
   cursor:pointer;
+  color:#fff
 }
-.menu-btn svg{ width:24px; height:24px; fill:#fff; }
+.menu-btn svg{
+  width:24px;
+  height:24px;
+}
+
+.menu-btn svg path{
+  fill:#fff;
+}
+
 
 /* ---------- Buttons (ARREGLADO: largos, NO gordos) ---------- */
 .btn{
