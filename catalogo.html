@@ -7,6 +7,100 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900;950&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
+
+  <style>
+
+/* =========================
+   CATALOGO TEMATICAS
+========================= */
+
+.catalog-hint{
+  margin-top: 10px;
+  font-weight: 900;
+  color: rgba(255,255,255,.65);
+  font-size: 13px;
+}
+
+.catalog-themes{
+  display: grid;
+  gap: 22px;
+}
+
+.theme-block{
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: var(--radius);
+  border: var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  box-shadow: var(--shadow);
+}
+
+.theme-head{
+  display: grid;
+  gap: 6px;
+  text-align: left;
+}
+
+.theme-title{
+  margin: 0;
+  font-size: 18px;
+  font-weight: 950;
+  letter-spacing: -.2px;
+}
+
+.theme-sub{
+  margin: 0;
+  color: rgba(255,255,255,.72);
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.theme-marquee{
+  padding: 12px;
+}
+
+/* carruseles mas suaves */
+.theme-marquee .track img{
+  width: 190px;
+  height: 190px;
+  border-radius: 22px;
+}
+
+/* cierre */
+.catalog-close{
+  margin-top: 8px;
+  padding: 18px;
+  border-radius: var(--radius);
+  border: var(--border);
+  background: rgba(255,255,255,.03);
+  text-align: center;
+}
+
+.catalog-close p{
+  margin: 0;
+  font-weight: 850;
+  line-height: 1.55;
+  color: rgba(255,255,255,.85);
+}
+
+.catalog-actions{
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+@media (min-width: 700px){
+  .catalog-actions{
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+}
+
+    
+  </style>
+  
 </head>
 
 <body>
