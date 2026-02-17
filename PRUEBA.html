@@ -11,230 +11,210 @@
   <style>
 
 /* =========================
-   CATÁLOGO POR VIBES ✨
-   (Acordeón + carrusel premium)
+   CATÁLOGO POR VIBES (BUBBLES)
 ========================= */
 
-.catalog-themes{
-  display: grid;
-  gap: 14px;
-}
-
-/* título */
-.catalog-themes .section-title{
-  text-align: center;
-  padding-bottom: 10px;
-}
-
-.catalog-themes .section-title p{
-  max-width: 560px;
-  margin: 10px auto 0;
-  color: rgba(255,255,255,.78);
-  font-weight: 700;
-  line-height: 1.55;
-}
-
-.catalog-hint{
-  margin-top: 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-weight: 950;
-  letter-spacing: -.2px;
-  color: rgba(255,255,255,.65);
-  font-size: 13px;
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.04);
-}
-
-/* =========================
-   ITEM
-========================= */
-
-.theme-item{
+.themes-float{
   position: relative;
-  overflow: hidden;
-  border-radius: 26px;
+  min-height: 420px;
+  border-radius: 30px;
   border: 1px solid rgba(255,255,255,.12);
   background:
-    radial-gradient(900px 260px at 10% 0%, rgba(255,79,166,.14), transparent 60%),
-    radial-gradient(900px 260px at 90% 0%, rgba(255,213,74,.10), transparent 60%),
-    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-  box-shadow: 0 18px 60px rgba(0,0,0,.55);
+    radial-gradient(900px 260px at 10% 0%, rgba(255,79,166,.10), transparent 60%),
+    radial-gradient(900px 260px at 90% 0%, rgba(255,213,74,.08), transparent 60%),
+    rgba(255,255,255,.03);
+  overflow: hidden;
+  box-shadow: 0 18px 60px rgba(0,0,0,.45);
+  padding: 18px;
 }
 
-.theme-item::after{
+/* glow sutil */
+.themes-float::after{
   content:"";
   position:absolute;
-  inset: -40%;
+  inset:-40%;
   background: radial-gradient(circle, rgba(255,255,255,.06), transparent 60%);
-  opacity: .45;
+  opacity:.5;
   pointer-events:none;
 }
 
-/* botón */
-.theme-btn{
-  width: 100%;
+/* bubble */
+.theme-bubble{
+  position: absolute;
   border: 0;
   cursor: pointer;
-  text-align: left;
-  padding: 16px 16px;
-  background: transparent;
-  color: #fff;
-  display: flex;
+  border-radius: 999px;
+  padding: 14px 16px;
+
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  border: 1px solid rgba(255,255,255,.14);
+
+  color: rgba(255,255,255,.92);
+  font-weight: 950;
+  letter-spacing: -.2px;
+  font-size: 14px;
+
+  box-shadow: 0 18px 40px rgba(0,0,0,.45);
+  backdrop-filter: blur(10px);
+
+  transform: translateZ(0);
+  transition: transform .2s ease, border-color .2s ease;
+  z-index: 2;
+}
+
+.theme-bubble span{
+  display:block;
+  white-space: nowrap;
+}
+
+.theme-bubble:hover{
+  transform: scale(1.03);
+  border-color: rgba(255,255,255,.22);
+}
+
+.theme-bubble:active{
+  transform: scale(.97);
+}
+
+/* posiciones */
+.b1{ top: 26px; left: 18px; }
+.b2{ top: 70px; right: 18px; }
+.b3{ top: 160px; left: 40px; }
+.b4{ top: 220px; right: 40px; }
+.b5{ bottom: 70px; left: 18px; }
+.b6{ bottom: 28px; right: 18px; }
+
+/* animaciones tipo logo, pero cada una con tiempo distinto */
+@keyframes floaty{
+  0%   { transform: translateY(0px) translateX(0px); }
+  50%  { transform: translateY(-14px) translateX(8px); }
+  100% { transform: translateY(0px) translateX(0px); }
+}
+
+.b1{ animation: floaty 6.5s ease-in-out infinite; }
+.b2{ animation: floaty 7.7s ease-in-out infinite; }
+.b3{ animation: floaty 8.9s ease-in-out infinite; }
+.b4{ animation: floaty 6.9s ease-in-out infinite; }
+.b5{ animation: floaty 9.6s ease-in-out infinite; }
+.b6{ animation: floaty 7.3s ease-in-out infinite; }
+
+@media (min-width: 700px){
+  .themes-float{
+    min-height: 360px;
+  }
+}
+
+/* =========================
+   MODAL DE TEMAS
+========================= */
+
+.theme-modal{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.62);
+  backdrop-filter: blur(10px);
+  display: none;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  position: relative;
-  z-index: 2;
-  text-align: center;
+  padding: 18px;
+  z-index: 9999;
 }
 
-.theme-left{
+.theme-modal.open{
   display:flex;
-  align-items:center;
-  gap: 12px;
-  min-width: 0;
 }
 
-.theme-text{
-  display:grid;
-  gap: 4px;
-  min-width: 0;
+.theme-modal-card{
+  width: min(980px, 100%);
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(900px 260px at 10% 0%, rgba(255,79,166,.10), transparent 60%),
+    radial-gradient(900px 260px at 90% 0%, rgba(255,213,74,.08), transparent 60%),
+    rgba(12,12,14,.92);
+  box-shadow: 0 30px 120px rgba(0,0,0,.75);
+  overflow: hidden;
 }
 
-.theme-title{
-  font-size: 16px;
+.theme-modal-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 18px 10px;
+}
+
+.theme-modal-title{
+  font-size: 18px;
   font-weight: 950;
   letter-spacing: -.3px;
+  text-transform: lowercase;
 }
 
-.theme-sub{
+.theme-modal-sub{
+  margin-top: 4px;
   font-size: 13px;
   font-weight: 750;
-  color: rgba(255,255,255,.70);
-  line-height: 1.35;
+  color: rgba(255,255,255,.72);
+  line-height: 1.45;
 }
 
-/* derecha */
-.theme-right{
-  display:flex;
-  align-items:center;
-  gap: 10px;
-  flex: 0 0 auto;
+.theme-modal-x{
+  border: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 950;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.10);
+  color: rgba(255,255,255,.85);
 }
 
-
-
-/* =========================
-   PANEL (acordeón)
-========================= */
-
-.theme-panel{
-  position: relative;
-  z-index: 2;
-
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height .35s ease;
-}
-
-/* cuando está abierto */
-.theme-item.open .theme-panel{
-  max-height: 600px;
-}
-
-
-/* =========================
-   GALERÍA (carrusel premium)
-========================= */
-
-.theme-gallery{
+.theme-modal-gallery{
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 72%;
+  grid-auto-columns: 78%;
   gap: 12px;
 
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
 
-  padding: 0 14px 16px;
-  margin-top: 2px;
+  padding: 10px 18px 18px;
 }
 
-.theme-gallery::-webkit-scrollbar{
-  height: 6px;
-}
-.theme-gallery::-webkit-scrollbar-thumb{
-  background: rgba(255,255,255,.12);
-  border-radius: 999px;
-}
-
-.theme-gallery img{
+.theme-modal-gallery img{
   width: 100%;
-  height: 220px;
+  height: 260px;
   object-fit: cover;
   border-radius: 22px;
   border: 1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.03);
-
   scroll-snap-align: start;
   box-shadow: 0 18px 40px rgba(0,0,0,.55);
-  transition: transform .22s var(--ease), filter .22s var(--ease);
-}
-
-.theme-gallery img:active{
-  transform: scale(.98);
 }
 
 @media (min-width: 700px){
-  .theme-gallery{
+  .theme-modal-gallery{
     grid-auto-columns: 260px;
   }
-  .theme-gallery img{
+  .theme-modal-gallery img{
     height: 230px;
   }
 }
 
-/* =========================
-   CIERRE
-========================= */
-
-.catalog-close{
-  margin-top: 10px;
-  padding: 18px;
-  border-radius: 26px;
-  border: 1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(700px 240px at 10% 0%, rgba(255,79,166,.10), transparent 60%),
-    radial-gradient(700px 240px at 90% 0%, rgba(255,213,74,.08), transparent 60%),
-    rgba(255,255,255,.03);
-  text-align: center;
-  box-shadow: 0 18px 60px rgba(0,0,0,.45);
-}
-
-.catalog-close p{
-  margin: 0;
-  font-weight: 950;
-  line-height: 1.55;
-  color: rgba(255,255,255,.88);
-  letter-spacing: -.2px;
-}
-
-.catalog-actions{
-  margin-top: 14px;
+.theme-modal-actions{
+  padding: 0 18px 18px;
   display: grid;
   gap: 10px;
 }
 
 @media (min-width: 700px){
-  .catalog-actions{
-    display: flex;
-    justify-content: center;
+  .theme-modal-actions{
+    display:flex;
+    justify-content: flex-end;
     gap: 12px;
   }
 }
@@ -385,101 +365,33 @@
         </div>
       
         <!-- ITEM -->
-        <div class="theme-item" data-theme>
-          <button class="theme-btn" type="button" aria-expanded="false">
-            <div class="theme-left">
-              <div class="theme-text">
-                <div class="theme-title">Adultos</div>
-                <div class="theme-sub">Elegante y divertido</div>
-              </div>
-            </div>
-            <div class="theme-right">
-            </div>
-          </button>
-      
-          <div class="theme-panel">
-            <div class="theme-gallery">
-              <img src="assets/catalogo/adultos/1.jpg" alt="Piñata adultos 1">
-              <img src="assets/catalogo/adultos/2.jpg" alt="Piñata adultos 2">
-              <img src="assets/catalogo/adultos/3.jpg" alt="Piñata adultos 3">
-              <img src="assets/catalogo/adultos/4.jpg" alt="Piñata adultos 4">
-              <img src="assets/catalogo/adultos/5.jpg" alt="Piñata adultos 5">
-            </div>
-          </div>
-        </div>
-      
-        <!-- ITEM -->
-        <div class="theme-item" data-theme>
-          <button class="theme-btn" type="button" aria-expanded="false">
-            <div class="theme-left">
-              <div class="theme-text">
-                <div class="theme-title">Festividades</div>
-                <div class="theme-sub">Mex, navidad, halloween, san valentín y más</div>
-              </div>
-            </div>
-            <div class="theme-right">
-            </div>
-          </button>
-      
-          <div class="theme-panel">
-            <div class="theme-gallery">
-              <img src="assets/catalogo/festivos/1.jpg" alt="Piñata festiva 1">
-              <img src="assets/catalogo/festivos/2.jpg" alt="Piñata festiva 2">
-              <img src="assets/catalogo/festivos/3.jpg" alt="Piñata festiva 3">
-              <img src="assets/catalogo/festivos/4.jpg" alt="Piñata festiva 4">
-              <img src="assets/catalogo/festivos/5.jpg" alt="Piñata festiva 5">
-            </div>
-          </div>
-        </div>
-      
-        <!-- ITEM -->
-        <div class="theme-item" data-theme>
-          <button class="theme-btn" type="button" aria-expanded="false">
-            <div class="theme-left">
-              <div class="theme-text">
-                <div class="theme-title">Eventos</div>
-                <div class="theme-sub">Boda, baby shower y más</div>
-              </div>
-            </div>
-            <div class="theme-right">
-            </div>
-          </button>
-      
-          <div class="theme-panel">
-            <div class="theme-gallery">
-              <img src="assets/catalogo/eventos/1.jpg" alt="Piñata para evento 1">
-              <img src="assets/catalogo/eventos/2.jpg" alt="Piñata para evento 2">
-              <img src="assets/catalogo/eventos/3.jpg" alt="Piñata para evento 3">
-              <img src="assets/catalogo/eventos/4.jpg" alt="Piñata para evento 4">
-              <img src="assets/catalogo/eventos/5.jpg" alt="Piñata para evento 5">
-            </div>
-          </div>
-        </div>
-      
-        <!-- ITEM -->
-        <div class="theme-item" data-theme>
-          <button class="theme-btn" type="button" aria-expanded="false">
-            <div class="theme-left">
-              <div class="theme-text">
-                <div class="theme-title">Diseños especiales</div>
-                <div class="theme-sub">Estructuras, 3d, detalles locos</div>
-              </div>
-            </div>
-            <div class="theme-right">
-            </div>
-          </button>
-      
-          <div class="theme-panel">
-            <div class="theme-gallery">
-              <img src="assets/catalogo/especiales/1.jpg" alt="Piñata especial 1">
-              <img src="assets/catalogo/especiales/2.jpg" alt="Piñata especial 2">
-              <img src="assets/catalogo/especiales/3.jpg" alt="Piñata especial 3">
-              <img src="assets/catalogo/especiales/4.jpg" alt="Piñata especial 4">
-              <img src="assets/catalogo/especiales/5.jpg" alt="Piñata especial 5">
-            </div>
-          </div>
-        </div>
-      
+<div class="themes-float">
+
+  <button class="theme-bubble b1" data-open="infantiles">
+    <span>infantiles</span>
+  </button>
+
+  <button class="theme-bubble b2" data-open="adultos">
+    <span>adultos</span>
+  </button>
+
+  <button class="theme-bubble b3" data-open="festividades">
+    <span>festividades</span>
+  </button>
+
+  <button class="theme-bubble b4" data-open="eventos">
+    <span>eventos</span>
+  </button>
+
+  <button class="theme-bubble b5" data-open="especiales">
+    <span>diseños especiales</span>
+  </button>
+
+  <button class="theme-bubble b6" data-open="atu">
+    <span>a tu temática</span>
+  </button>
+
+</div>
       
         <!-- CIERRE (dejas el tuyo igual) -->
         <div class="catalog-close">
@@ -502,6 +414,29 @@
 </section>
 
 
+<div class="theme-modal" id="themeModal">
+  <div class="theme-modal-card">
+
+    <div class="theme-modal-head">
+      <div>
+        <div class="theme-modal-title" id="themeTitle">tema</div>
+        <div class="theme-modal-sub" id="themeSub">descripcion</div>
+      </div>
+
+      <button class="theme-modal-x" id="closeThemeModal" type="button">×</button>
+    </div>
+
+    <div class="theme-modal-gallery" id="themeGallery"></div>
+
+    <div class="theme-modal-actions">
+      <a class="btn btn-primary" href="cotizar.html">realizar cotizacion</a>
+      <button class="btn btn-ghost" id="closeThemeModal2" type="button">cerrar</button>
+    </div>
+
+  </div>
+</div>
+
+    
 
   </main>
 
@@ -587,32 +522,85 @@
 </script>
 
 <script>
-  // =========================
-  // CATALOGO: ACORDEON (solo 1 abierto)
-  // =========================
-  const themes = document.querySelectorAll("[data-theme]");
+  const themeData = {
+    infantiles: {
+      title: "infantiles",
+      sub: "personajes, colores y mucha fiesta",
+      folder: "assets/catalogo/infantiles/"
+    },
+    adultos: {
+      title: "adultos",
+      sub: "elegante y divertido",
+      folder: "assets/catalogo/adultos/"
+    },
+    festividades: {
+      title: "festividades",
+      sub: "mex, navidad, halloween, san valentín y más",
+      folder: "assets/catalogo/festivos/"
+    },
+    eventos: {
+      title: "eventos",
+      sub: "boda, baby shower y más",
+      folder: "assets/catalogo/eventos/"
+    },
+    especiales: {
+      title: "diseños especiales",
+      sub: "estructuras, 3d, detalles locos",
+      folder: "assets/catalogo/especiales/"
+    },
+    atu: {
+      title: "a tu temática",
+      sub: "dinos tu idea y lo hacemos realidad",
+      folder: "assets/catalogo/atu/"
+    }
+  };
 
-  themes.forEach(item => {
-    const btn = item.querySelector(".theme-btn");
+  const modal = document.getElementById("themeModal");
+  const close1 = document.getElementById("closeThemeModal");
+  const close2 = document.getElementById("closeThemeModal2");
+  const title = document.getElementById("themeTitle");
+  const sub = document.getElementById("themeSub");
+  const gallery = document.getElementById("themeGallery");
 
+  document.querySelectorAll("[data-open]").forEach(btn => {
     btn.addEventListener("click", () => {
-      const isOpen = item.classList.contains("open");
+      const key = btn.getAttribute("data-open");
+      const data = themeData[key];
+      if(!data) return;
 
-      // cerrar todos
-      themes.forEach(i => {
-        i.classList.remove("open");
-        const b = i.querySelector(".theme-btn");
-        if(b) b.setAttribute("aria-expanded", "false");
-      });
+      title.textContent = data.title;
+      sub.textContent = data.sub;
 
-      // si no estaba abierto, abrirlo
-      if(!isOpen){
-        item.classList.add("open");
-        btn.setAttribute("aria-expanded", "true");
+      gallery.innerHTML = "";
+      for(let i=1; i<=5; i++){
+        const img = document.createElement("img");
+        img.src = `${data.folder}${i}.jpg`;
+        img.alt = `${data.title} ${i}`;
+        gallery.appendChild(img);
       }
+
+      modal.classList.add("open");
+      document.body.style.overflow = "hidden";
     });
   });
+
+  function closeModal(){
+    modal.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  close1.addEventListener("click", closeModal);
+  close2.addEventListener("click", closeModal);
+
+  modal.addEventListener("click", (e) => {
+    if(e.target === modal) closeModal();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if(e.key === "Escape") closeModal();
+  });
 </script>
+
 
 
   <script src="assets/js/main.js"></script>
