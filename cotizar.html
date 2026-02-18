@@ -3,284 +3,498 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Piñata Colada | Piñatas personalizadas</title>
+  <title>Cotizar | Piñata Colada</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900;950&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css">
+
+  <style>
+    :root{
+      --bg:#0b0b12;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.04);
+      --border: rgba(255,255,255,.12);
+      --muted: rgba(255,255,255,.72);
+      --muted2: rgba(255,255,255,.55);
+
+      --pink:#ff4fa6;
+      --yellow:#ffd54a;
+
+      --radius: 22px;
+      --ease: cubic-bezier(.2,.8,.2,1);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; padding:0; background:var(--bg); color:#fff; font-family:"Montserrat",system-ui; }
+
+    a{ color:inherit; text-decoration:none; }
+    button,input,select,textarea{ font-family:inherit; }
+
+    .container{
+      width: min(980px, 92vw);
+      margin: 0 auto;
+    }
+
+    /* HEADER SIMPLE */
+    header{
+      position: sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(10,10,16,.78), rgba(10,10,16,.30));
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      padding: 14px 0;
+      gap: 14px;
+    }
+    .brand img{ height: 54px; width:auto; display:block; }
+
+    .btn{
+      border:0;
+      cursor:pointer;
+      font-weight: 900;
+      letter-spacing: .2px;
+      border-radius: 999px;
+      padding: 12px 16px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      user-select:none;
+      transition: transform .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease);
+      white-space: nowrap;
+    }
+    .btn:active{ transform: translateY(1px) scale(.99); }
+
+    .btn-primary{
+      background: linear-gradient(135deg, var(--pink), var(--yellow));
+      color:#111;
+      box-shadow: 0 18px 40px rgba(255,79,166,.18), 0 18px 40px rgba(255,213,74,.14);
+    }
+    .btn-ghost{
+      background: rgba(255,255,255,.06);
+      color:#fff;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    /* HERO */
+    .hero{
+      padding: 26px 0 10px;
+    }
+    .hero-card{
+      border-radius: 28px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,79,166,.18), transparent 55%),
+        radial-gradient(circle at 85% 0%, rgba(255,213,74,.14), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: 0 25px 80px rgba(0,0,0,.55);
+    }
+
+    h1{
+      margin:0;
+      font-size: clamp(22px, 6vw, 34px);
+      line-height:1.05;
+      font-weight: 950;
+      letter-spacing: -.7px;
+    }
+    .lead{
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-weight: 700;
+      line-height:1.55;
+      font-size: 14px;
+    }
+
+    .highlight{
+      font-weight: 950;
+      background: linear-gradient(135deg, var(--pink), var(--yellow));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 10px rgba(255,79,166,.18);
+    }
+
+    /* FORM */
+    .form-wrap{
+      padding: 14px 0 40px;
+    }
+
+    .form-card{
+      margin-top: 14px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      box-shadow: 0 18px 70px rgba(0,0,0,.55);
+      overflow:hidden;
+    }
+
+    .form-head{
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+    }
+
+    .form-title{
+      font-weight: 950;
+      letter-spacing: -.3px;
+      font-size: 16px;
+      margin:0;
+    }
+    .form-sub{
+      margin: 6px 0 0;
+      color: rgba(255,255,255,.70);
+      font-weight: 700;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    form{
+      padding: 16px;
+      display:grid;
+      gap: 14px;
+    }
+
+    .field{
+      display:grid;
+      gap: 8px;
+    }
+
+    label{
+      font-weight: 900;
+      font-size: 12px;
+      color: rgba(255,255,255,.80);
+      letter-spacing: .2px;
+      text-transform: lowercase;
+    }
+
+    input, select, textarea{
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      padding: 14px 14px;
+      font-weight: 800;
+      outline: none;
+      transition: border-color .18s var(--ease), transform .18s var(--ease), background .18s var(--ease);
+    }
+
+    textarea{ min-height: 120px; resize: vertical; }
+
+    input:focus, select:focus, textarea:focus{
+      border-color: rgba(255,213,74,.35);
+      background: rgba(255,255,255,.08);
+    }
+
+    .two{
+      display:grid;
+      gap: 14px;
+    }
+
+    @media(min-width: 720px){
+      .two{
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .help{
+      font-size: 12px;
+      color: rgba(255,255,255,.55);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .actions{
+      display:grid;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .status{
+      display:none;
+      padding: 14px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      font-weight: 850;
+      color: rgba(255,255,255,.88);
+      line-height:1.45;
+    }
+    .status.show{ display:block; }
+
+    .status.ok{
+      border-color: rgba(46, 213, 115, .25);
+      background: rgba(46, 213, 115, .06);
+    }
+    .status.bad{
+      border-color: rgba(255, 71, 87, .25);
+      background: rgba(255, 71, 87, .06);
+    }
+
+    /* NOTAS IMPORTANTES */
+    .notes{
+      margin-top: 16px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      padding: 16px;
+    }
+
+    .notes h3{
+      margin:0;
+      font-weight: 950;
+      font-size: 14px;
+      letter-spacing: -.2px;
+    }
+
+    .notes ul{
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: rgba(255,255,255,.72);
+      font-weight: 750;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    /* LOADER */
+    .spinner{
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 3px solid rgba(0,0,0,.18);
+      border-top-color: rgba(0,0,0,.55);
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
+  </style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <div class="container">
+<header>
+  <div class="container">
+    <div class="nav">
+      <a href="#" class="brand">
+        <img src="assets/logo.png" alt="Piñata Colada">
+      </a>
 
-      <div class="nav">
-        <!-- Logo a inicio -->
-       <a href="index.html" class="brand">
-          <img class="brand-logo" src="assets/logo.png" alt="Piñata Colada">
-        </a>
-
-
-        <!-- Links desktop -->
-        <nav class="nav-links" aria-label="Secciones">
-          <a href="tamanos.html">Tamaños</a>
-          <a href="catalogo.html">Catálogo</a>
-          <a href="preguntas.html">Preguntas</a>
-          <a href="cotizar.html">Cotizar</a>
-        </nav>
-
-        <!-- CTA -->
-        <div class="nav-cta">
-          <!-- En móvil este se oculta para no saturar -->
-          <button class="btn btn-ghost" id="btnWhats" type="button">
-            <!-- icon WhatsApp -->
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#fff" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20Zm4.6-5.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.4-.1-.6.1-.2.2-.7.7-.8.9-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.4c.1-.1.2-.3.3-.4.1-.1.1-.3 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.2.2-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.3 3.9.6.3 1.1.4 1.4.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5.2-1 .1-1.1-.1-.1-.3-.2-.5-.3Z"/>
-            </svg>
-            WhatsApp
-          </button>
-
-          <button class="btn btn-primary" id="btnCotizarTop" type="button">
-            <!-- icon spark -->
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Zm7 11l.9 3.2 3.1.8-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.8.9-3.2Z"/>
-            </svg>
-            Realizar cotización
-          </button>
-
-          <!-- Hamburguesa (móvil) -->
-          <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 7h16v2H4V7Zm0 8h16v2H4v-2Zm0-4h16v2H4v-2Z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Menú móvil -->
-      <div class="mobile-nav" id="mobileNav" aria-label="Menú móvil">
-        <div class="mobile-links">
-          <a href="tamanos.html">Tamaños <span>→</span></a>
-          <a href="catalogo.html">Catálogo <span>→</span></a>
-          <a href="preguntas.html">Preguntas <span>→</span></a>
-          <a href="cotizar.html">Cotizar <span>→</span></a>
-        </div>
-
-        <div class="mobile-cta">
-          <button class="btn btn-ghost" id="btnWhatsMobile" type="button">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#fff" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20Zm4.6-5.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.4-.1-.6.1-.2.2-.7.7-.8.9-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.4c.1-.1.2-.3.3-.4.1-.1.1-.3 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.2.2-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.3 3.9.6.3 1.1.4 1.4.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5.2-1 .1-1.1-.1-.1-.3-.2-.5-.3Z"/>
-            </svg>
-            WhatsApp
-          </button>
-
-          <button class="btn btn-primary" id="btnCotizarMobile" type="button">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Zm7 11l.9 3.2 3.1.8-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.8.9-3.2Z"/>
-            </svg>
-            Cotizar ahora
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </header>
-
-
-
-  <main>
-
-    <section class="hero">
-      <div class="container">
-        <div class="hero-grid">
-
-          <div class="logo-wrap">
-            <div class="logo-inner">
-              <img class="logo-img hit" src="assets/logo.png" alt="Logo Piñata Colada" />
-            </div>
-          </div>
-
-          <div>
-            
-            <h1>Un coctel de sabor 🎉</h1>
-
-            <p class="lead">
-              En <span class="highlight-brand">Piñata Colada</span> creamos piñatas con un acabado increíble, súper fotogénicas y listas para tu fiesta.
-              <br><br>
-              Elige tamaño, dinos la idea… 
-              <br>
-              y nosotros <span class="highlight-magic">hacemos la magia</span>.
-            </p>
-
-<!-- 
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="Contacto.html">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Z"/>
-                </svg>
-                Realizar cotización
-              </a>
-
-              <a class="btn btn-ghost" href="Catalogo.html">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="#fff" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Z"/>
-                </svg>
-                Ver catálogo
-              </a>
-            </div>
--->
-            <div class="hero-badges">
-              <div class="badge">🎨 Diseños únicos</div>
-              <div class="badge">📍 Irapuato, Gto.</div>
-              <div class="badge">🕒 A tiempo</div>
-              <div class="badge">✨ Temáticas</div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <div class="section-title">
-          <h2 class="section-title-highlight">Explora Piñata Colada</h2>
-          <p>Elige tu tamaño → Inspírate → Aclara dudas → Cotiza.</p>
-        </div>
-
-        <div class="grid-3">
-          <article class="card open">
-            <p class="size-name">Tamaños</p>
-            <p class="size-sub">Elige el formato ideal.</p>
-            <div class="price"><a class="btn btn-primary" href="tamanos.html">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Zm7 11l.9 3.2 3.1.8-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.8.9-3.2Z"/>
-                </svg>Ver tamaños</a></div>
-          </article>
-
-          <article class="card open">
-            <p class="size-name">Catálogo</p>
-            <p class="size-sub">Ejemplos reales y estilos.</p>
-            <div class="price"><a class="btn btn-primary" href="catalogo.html">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Zm7 11l.9 3.2 3.1.8-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.8.9-3.2Z"/>
-                </svg>
-              Ver catálogo</a></div>
-          </article>
-
-          <article class="card open">
-            <p class="size-name">Preguntas</p>
-            <p class="size-sub">Tienes alguna duda.</p>
-            <div class="price"><a class="btn btn-primary" href="preguntas.html">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Zm7 11l.9 3.2 3.1.8-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.8.9-3.2Z"/>
-                </svg>
-              FAQ
-            </a></div>
-          </article>
-
-          <article class="card open">
-            <p class="size-name">Cotizar</p>
-            <p class="size-sub">Te toma menos de 1 minuto.</p>
-            <div class="price">
-              <a class="btn btn-primary" href="cotizar.html">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Zm7 11l.9 3.2 3.1.8-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.8.9-3.2Z"/>
-                </svg>
-                Realizar cotización
-              </a>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- FOOTER + MODAL -->
-  <!-- (Lo mismo en todas, te lo pongo abajo en bloque para que copies) -->
-
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-
-        <div class="footer-col">
-          <div class="footer-title">Piñata Colada</div>
-          <div class="footer-subtitle">Piñatas personalizadas • Irapuato, Gto</div>
-
-          <div class="footer-socials">
-            <a class="social-btn" href="#" target="_blank" rel="noopener" aria-label="Facebook">
-              <svg viewBox="0 0 24 24"><path d="M22 12.07C22 6.48 17.52 2 11.93 2S1.86 6.48 1.86 12.07c0 5.03 3.66 9.2 8.44 9.93v-7.03H7.76v-2.9h2.54V9.85c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.77l-.44 2.9h-2.33V22c4.78-.73 8.44-4.9 8.44-9.93Z"/></svg>
-            </a>
-            <a class="social-btn" href="#" target="_blank" rel="noopener" aria-label="Instagram">
-              <svg viewBox="0 0 24 24"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Z"/><path d="M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/><path d="M17.5 6.4a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Z"/></svg>
-            </a>
-            <a class="social-btn" href="#" target="_blank" rel="noopener" aria-label="TikTok">
-              <svg viewBox="0 0 24 24"><path d="M16.5 2h-2.9v13.2c0 1.6-1.3 2.8-2.8 2.8-1.6 0-2.8-1.3-2.8-2.8s1.3-2.8 2.8-2.8c.4 0 .8.1 1.1.2V9.1c-.4-.1-.8-.1-1.1-.1-3 0-5.4 2.4-5.4 5.4S7.8 20 10.8 20s5.4-2.4 5.4-5.4V7.7c1.1 1.2 2.6 2 4.3 2.2V7.1c-2.1-.3-3.7-2-4-4.1Z"/></svg>
-            </a>
-          </div>
-
-          <div class="footer-copy">
-            © <span id="year"></span> Piñata Colada. Todos los derechos reservados.
-          </div>
-        </div>
-
-        <div class="footer-col footer-legal">
-          <div class="footer-title-sm">Legal</div>
-
-          <div class="footer-links">
-            <button class="footer-link" id="btnTerms" type="button">
-              <svg class="link-ico" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm8 1.5V8h4.5L14 3.5ZM8 12h8v2H8v-2Zm0 4h8v2H8v-2Z"/></svg>
-              <span>Términos y condiciones</span>
-            </button>
-
-            <button class="footer-link" id="btnPrivacy" type="button">
-              <svg class="link-ico" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 1 1 6 0v3H9Z"/></svg>
-              <span>Aviso de privacidad</span>
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </footer>
-
-  <div class="modal" id="modalLegal">
-    <div class="modal-card" role="dialog" aria-modal="true">
-      <div class="modal-head">
-        <div>
-          <h3 id="legalTitle">Legal</h3>
-          <p id="legalSubtitle">Información importante.</p>
-        </div>
-        <button class="x" id="closeLegal" type="button">×</button>
-      </div>
-      <div style="padding:18px; color:rgba(255,255,255,.72); font-weight:650; line-height:1.7;">
-        <div id="legalBody"></div>
-      </div>
+      <a class="btn btn-ghost" href="tamanos.html">ver tamaños</a>
     </div>
   </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-card">
+        <h1>Haz tu <span class="highlight">cotización</span> ✨</h1>
+        <p class="lead">
+          En menos de 1 minuto nos dejas tu idea y te respondemos con precio, tiempos y disponibilidad.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-wrap">
+    <div class="container">
+
+      <div class="form-card">
+        <div class="form-head">
+          <p class="form-title">datos para tu piñata</p>
+          <p class="form-sub">
+            llena lo básico y nosotros te guiamos en el resto. si no sabes algo, no pasa nada.
+          </p>
+        </div>
+
+        <form id="formCotizacion" autocomplete="on">
+
+          <div class="two">
+            <div class="field">
+              <label for="cliente">cliente</label>
+              <input id="cliente" name="cliente" type="text" placeholder="tu nombre" required />
+              <div class="help">se convertirá a mayúsculas automáticamente.</div>
+            </div>
+
+            <div class="field">
+              <label for="telefono">teléfono</label>
+              <input id="telefono" name="telefono" type="tel" inputmode="numeric" placeholder="4491234567" required />
+              <div class="help">10 dígitos (méxico). sin espacios.</div>
+            </div>
+          </div>
+
+          <div class="two">
+            <div class="field">
+              <label for="tamano">tamaño</label>
+              <select id="tamano" name="tamano" required>
+                <option value="" selected disabled>elige un tamaño</option>
+                <option value="s - sutil">s - sutil</option>
+                <option value="m - colada">m - colada</option>
+                <option value="l - epica">l - epica</option>
+                <option value="diseno a tu tematica">diseno a tu tematica</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="evento">evento (opcional)</label>
+              <input id="evento" name="evento" type="text" placeholder="cumpleaños, boda, baby shower..." />
+            </div>
+          </div>
+
+          <div class="two">
+            <div class="field">
+              <label for="fechaEntrega">fecha de entrega</label>
+              <input id="fechaEntrega" name="fechaEntrega" type="date" required />
+              <div class="help">idealmente con varios días de anticipación.</div>
+            </div>
+
+            <div class="field">
+              <label for="entrega">entrega</label>
+              <select id="entrega" name="entrega" required>
+                <option value="" selected disabled>elige una opción</option>
+                <option value="recoleccion">recoleccion</option>
+                <option value="envio">envio</option>
+              </select>
+              <div class="help">si es envío, depende de ubicación.</div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="ubicacion">ubicación</label>
+            <input id="ubicacion" name="ubicacion" type="text" placeholder="colonia, ciudad (ej: irapuato centro)" required />
+            <div class="help">nos ayuda a confirmar si aplica entrega y costo.</div>
+          </div>
+
+          <div class="field">
+            <label for="diseno">diseño</label>
+            <input id="diseno" name="diseno" type="text" placeholder="ej: spiderman, hello kitty, one piece..." required />
+          </div>
+
+          <div class="field">
+            <label for="detalles">detalles extra (opcional)</label>
+            <textarea id="detalles" name="detalles" placeholder="colores, nombre, edad, si quieres 3d, referencias, etc..."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="metodoPago">método de pago</label>
+            <select id="metodoPago" name="metodoPago" required>
+              <option value="" selected disabled>elige método</option>
+              <option value="efectivo">efectivo</option>
+              <option value="transferencia">transferencia</option>
+            </select>
+          </div>
+
+          <div class="status" id="statusBox"></div>
+
+          <div class="actions">
+            <button class="btn btn-primary" id="btnEnviar" type="submit">
+              enviar cotización
+            </button>
+            <a class="btn btn-ghost" href="catalogo.html">ver catálogo</a>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="notes">
+        <h3>notas importantes</h3>
+        <ul>
+          <li>tu cotización se confirma por whatsapp una vez revisada.</li>
+          <li>tiempo de diseño y elaboración depende de la complejidad y disponibilidad.</li>
+          <li>para apartar fecha se solicita <b>50% de anticipo</b>.</li>
+          <li>el 50% restante se paga al entregar.</li>
+          <li>entregas y envíos dependen de ubicación (se confirma al cotizar).</li>
+          <li>si necesitas una fecha muy cercana, se revisa disponibilidad primero.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+</main>
 
 <script>
-  const menuBtn = document.getElementById("menuBtn");
-  const mobileNav = document.getElementById("mobileNav");
+  const form = document.getElementById("formCotizacion");
+  const statusBox = document.getElementById("statusBox");
+  const btnEnviar = document.getElementById("btnEnviar");
 
-  if(menuBtn && mobileNav){
-    menuBtn.addEventListener("click", () => {
-      mobileNav.classList.toggle("open");
-    });
+  const cliente = document.getElementById("cliente");
+  const telefono = document.getElementById("telefono");
 
-    // cerrar al tocar un link
-    mobileNav.querySelectorAll("a").forEach(a=>{
-      a.addEventListener("click", ()=>{
-        mobileNav.classList.remove("open");
-      });
-    });
+  // cliente a mayúsculas
+  cliente.addEventListener("input", () => {
+    const pos = cliente.selectionStart;
+    cliente.value = cliente.value.toUpperCase();
+    cliente.setSelectionRange(pos, pos);
+  });
+
+  // teléfono solo números
+  telefono.addEventListener("input", () => {
+    telefono.value = telefono.value.replace(/\D/g, "").slice(0, 10);
+  });
+
+  function showStatus(msg, ok=true){
+    statusBox.className = "status show " + (ok ? "ok" : "bad");
+    statusBox.innerHTML = msg;
   }
+
+  function setLoading(on){
+    if(on){
+      btnEnviar.disabled = true;
+      btnEnviar.innerHTML = `<span class="spinner"></span> enviando...`;
+    }else{
+      btnEnviar.disabled = false;
+      btnEnviar.innerHTML = `enviar cotización`;
+    }
+  }
+
+  function isValidPhoneMX(phone){
+    const clean = String(phone).replace(/\D/g,"");
+    return clean.length === 10;
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const data = {
+      cliente: document.getElementById("cliente").value.trim(),
+      telefono: document.getElementById("telefono").value.trim(),
+      tamano: document.getElementById("tamano").value,
+      diseno: document.getElementById("diseno").value.trim(),
+      fechaEntrega: document.getElementById("fechaEntrega").value,
+      evento: document.getElementById("evento").value.trim(),
+      detalles: document.getElementById("detalles").value.trim(),
+      metodoPago: document.getElementById("metodoPago").value,
+      entrega: document.getElementById("entrega").value,
+      ubicacion: document.getElementById("ubicacion").value.trim()
+    };
+
+    if(!isValidPhoneMX(data.telefono)){
+      showStatus("El teléfono debe tener 10 dígitos (México).", false);
+      return;
+    }
+
+    setLoading(true);
+    showStatus("Enviando tu cotización… ✨", true);
+
+    google.script.run
+      .withSuccessHandler(res => {
+        setLoading(false);
+        showStatus(`¡Listo! 🎉 Tu folio es <b>${res.folio}</b>. En breve te contactamos.`, true);
+        form.reset();
+      })
+      .withFailureHandler(err => {
+        setLoading(false);
+        showStatus("Ocurrió un error al enviar. Intenta otra vez o escríbenos por WhatsApp.", false);
+        console.error(err);
+      })
+      .enviarCotizacion(data);
+  });
 </script>
 
-
-
-  <script src="assets/js/main.js"></script>
 </body>
 </html>
