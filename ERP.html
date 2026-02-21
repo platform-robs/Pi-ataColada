@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+
+  <style>
+    body{
+      margin:0;
+      font-family: 'Montserrat', sans-serif;
+      background:#111;
+      color:white;
+    }
+
+    header{
+      padding:20px;
+      font-weight:900;
+      font-size:22px;
+      background:linear-gradient(135deg,#ff4fa6,#ffd84f);
+      color:black;
+    }
+
+    .filters{
+      display:flex;
+      gap:10px;
+      padding:15px;
+    }
+
+    .filter-btn{
+      padding:8px 14px;
+      border-radius:999px;
+      border:none;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .cards{
+      padding:20px;
+      display:grid;
+      gap:15px;
+    }
+
+    .card{
+      background:#1c1c1c;
+      padding:15px;
+      border-radius:12px;
+    }
+
+    .generate{
+      margin-top:10px;
+      background:#ffd84f;
+      color:black;
+      font-weight:900;
+      border:none;
+      padding:8px 12px;
+      border-radius:6px;
+      cursor:pointer;
+    }
+
+  </style>
+</head>
+<body>
+
+<header>ADMIN — PIÑATA COLADA</header>
+
+<div class="filters">
+  <button class="filter-btn" onclick="filtrar('PENDIENTE')">Pendiente</button>
+  <button class="filter-btn" onclick="filtrar('EN DESARROLLO')">En desarrollo</button>
+  <button class="filter-btn" onclick="filtrar('FINALIZADA')">Finalizada</button>
+</div>
+
+<div class="cards" id="cards"></div>
+
+<script>
+
+let cotizaciones = [];
+
+google.script.run.withSuccessHandler(data => {
+  cotizaciones = data;
+  render(data);
+}).obtenerCotizaciones();
+
+
+function render(data){
+  const container = document.getElementById("cards");
+  container.innerHTML = "";
+
+  data.forEach(c => {
+
+    container.innerHTML += `
+      <div class="card">
+        <b>${c.Folio}</b><br>
+        ${c.Cliente}<br>
+        ${c["Fecha entrega"]}<br>
+        ESTATUS: ${c.Estatus}
+
+        <button class="generate"
+          onclick='crearTicket(${JSON.stringify(c)})'>
+          Generar Ticket
+        </button>
+      </div>
+    `;
+  });
+}
+
+function filtrar(estatus){
+  render(cotizaciones.filter(c => c.Estatus === estatus));
+}
+
+function crearTicket(data){
+  alert("Aquí abriremos editor de ticket");
+}
+
+</script>
+
+</body>
+</html>
