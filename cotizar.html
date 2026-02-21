@@ -16,10 +16,13 @@
     ================================= */
     
     .quote-card-body{
+      padding: 16px;
+    
       max-height: 0;
       overflow: hidden;
-      transition: max-height .5s ease, opacity .4s ease;
       opacity: 0;
+    
+      transition: max-height .5s ease, opacity .4s ease;
     }
     
     .quote-card.open .quote-card-body{
@@ -101,10 +104,6 @@
       color: rgba(255,255,255,.92);
       letter-spacing: .2px;
       font-size: 13px;
-    }
-
-    .quote-card-body{
-      padding: 16px;
     }
 
     .form-grid{
@@ -782,7 +781,7 @@ Gracias 🙌
 `;
 
 const encoded = encodeURIComponent(waMessage);
-window.location.href = `https://wa.me/${WA_NUMBER}?text=${encoded}`;
+window.open(`https://wa.me/${WA_NUMBER}?text=${encoded}`, "_blank");
 
           // Éxito
           if(successMsg){
