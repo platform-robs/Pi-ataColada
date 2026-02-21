@@ -7,7 +7,7 @@
   <style>
     body{
       margin:0;
-      font-family: 'Montserrat', sans-serif;
+      font-family: Arial, sans-serif;
       background:#111;
       color:white;
     }
@@ -18,10 +18,12 @@
       font-size:22px;
       background:linear-gradient(135deg,#ff4fa6,#ffd84f);
       color:black;
+      text-align:center;
     }
 
     .filters{
       display:flex;
+      justify-content:center;
       gap:10px;
       padding:15px;
     }
@@ -38,6 +40,8 @@
       padding:20px;
       display:grid;
       gap:15px;
+      max-width:900px;
+      margin:auto;
     }
 
     .card{
@@ -57,6 +61,29 @@
       cursor:pointer;
     }
 
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.8);
+      display:none;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .modal-content{
+      background:white;
+      color:black;
+      padding:20px;
+      border-radius:12px;
+      width:350px;
+    }
+
+    input{
+      width:100%;
+      padding:8px;
+      margin-bottom:10px;
+    }
+
   </style>
 </head>
 <body>
@@ -64,22 +91,38 @@
 <header>ADMIN — PIÑATA COLADA</header>
 
 <div class="filters">
-  <button class="filter-btn" onclick="filtrar('PENDIENTE')">Pendiente</button>
-  <button class="filter-btn" onclick="filtrar('EN DESARROLLO')">En desarrollo</button>
-  <button class="filter-btn" onclick="filtrar('FINALIZADA')">Finalizada</button>
+  <button onclick="filtrar('PENDIENTE')">Pendiente</button>
+  <button onclick="filtrar('EN DESARROLLO')">En desarrollo</button>
+  <button onclick="filtrar('FINALIZADA')">Finalizada</button>
+  <button onclick="render(cotizaciones)">Todos</button>
 </div>
 
 <div class="cards" id="cards"></div>
 
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3>Generar Ticket</h3>
+
+    <input type="number" id="precio" placeholder="Precio cotizado">
+    <input type="number" id="anticipo" placeholder="Anticipo">
+
+    <button onclick="guardar()">Guardar Ticket</button>
+    <button onclick="cerrar()">Cancelar</button>
+  </div>
+</div>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
 <script>
 
 let cotizaciones = [];
+let seleccionActual = null;
 
 google.script.run.withSuccessHandler(data => {
   cotizaciones = data;
   render(data);
 }).obtenerCotizaciones();
-
 
 function render(data){
   const container = document.getElementById("cards");
@@ -91,11 +134,11 @@ function render(data){
       <div class="card">
         <b>${c.Folio}</b><br>
         ${c.Cliente}<br>
-        ${c["Fecha entrega"]}<br>
-        ESTATUS: ${c.Estatus}
+        ${c["Fecha entrega"] || ""}<br>
+        ESTATUS: ${c.Estatus}<br>
 
         <button class="generate"
-          onclick='crearTicket(${JSON.stringify(c)})'>
+          onclick='abrirModal(${JSON.stringify(c)})'>
           Generar Ticket
         </button>
       </div>
@@ -107,8 +150,84 @@ function filtrar(estatus){
   render(cotizaciones.filter(c => c.Estatus === estatus));
 }
 
-function crearTicket(data){
-  alert("Aquí abriremos editor de ticket");
+function abrirModal(data){
+  seleccionActual = data;
+  document.getElementById("modal").style.display="flex";
+}
+
+function cerrar(){
+  document.getElementById("modal").style.display="none";
+}
+
+function guardar(){
+
+  const precio = Number(document.getElementById("precio").value);
+  const anticipo = Number(document.getElementById("anticipo").value);
+  const saldo = precio - anticipo;
+
+  const ticket = {
+    folio: seleccionActual.Folio,
+    fechaSolicitud: seleccionActual["Fecha registro"],
+    cliente: seleccionActual.Cliente,
+    tamano: seleccionActual.Tamaño,
+    diseno: seleccionActual.Diseño,
+    fechaEntrega: seleccionActual["Fecha entrega"],
+    evento: seleccionActual.Evento,
+    telefono: seleccionActual.Teléfono,
+    precio: precio,
+    anticipo: anticipo,
+    saldo: saldo,
+    metodoPago: seleccionActual["Método pago"],
+    entrega: seleccionActual.Entrega
+  };
+
+  google.script.run.guardarTicket(ticket);
+
+  generarImagen(ticket);
+
+  cerrar();
+}
+
+function generarImagen(ticket){
+
+  const div = document.createElement("div");
+  div.innerHTML = `
+    <div id="ticket" style="
+      width:400px;
+      padding:20px;
+      background:white;
+      color:black;
+      font-family:monospace;
+    ">
+      <h2 style="text-align:center">PIÑATA COLADA</h2>
+      <hr>
+      Cliente: ${ticket.cliente}<br>
+      Tamaño: ${ticket.tamano}<br>
+      Diseño: ${ticket.diseno}<br>
+      Precio: $${ticket.precio}<br>
+      Anticipo: $${ticket.anticipo}<br>
+      Saldo: $${ticket.saldo}<br>
+      <hr>
+      Gracias por tu compra
+    </div>
+  `;
+
+  document.body.appendChild(div);
+
+  html2canvas(document.getElementById("ticket"))
+  .then(canvas => {
+
+    const base64 = canvas.toDataURL("image/png");
+
+    google.script.run.guardarTicketImagen(
+      base64,
+      "TICKET_" + ticket.folio + ".png"
+    );
+
+    alert("Ticket guardado en Drive y en hoja TICKETS");
+
+    div.remove();
+  });
 }
 
 </script>
