@@ -604,7 +604,7 @@
     // 3) FORMULARIO (FETCH)
     // ==========================================================
     const APPS_SCRIPT_WEBAPP_URL =
-      "https://script.google.com/macros/s/AKfycbwTA18Y4QApISRSPxkgxtlDY1871BgSbYAt1ecFihm9DXx_Sre0ixcS3qHy5L0lJCwy/exec";
+      "https://script.google.com/macros/s/AKfycbwFn4kpAdQyv9w1DyHfoQO7oVKAt2LI5frRArgGx3-wUZBY5s7p12WMnOSK2Jnuhzky/exec";
 
     const quoteForm = document.getElementById("quoteForm");
     const successMsg = document.getElementById("successMsg");
@@ -734,7 +734,7 @@ Gracias 🙌
 `;
 
 const encoded = encodeURIComponent(waMessage);
-window.open(`https://wa.me/${WA_NUMBER}?text=${encoded}`, "_blank");
+window.location.href = `https://wa.me/${WA_NUMBER}?text=${encoded}`;
 
           // Éxito
           if(successMsg){
