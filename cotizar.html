@@ -710,6 +710,32 @@
             throw new Error(data.error || "Error desconocido");
           }
 
+          // =====================================
+// 🚀 ABRIR WHATSAPP CON LA COTIZACIÓN
+// =====================================
+const waMessage = `
+Hola! ✨
+
+Te envío mi solicitud de cotización:
+
+📄 Folio: ${data.folio}
+👤 Cliente: ${payload.cliente}
+📱 Tel: ${payload.telefono}
+
+🎉 Tamaño: ${payload.tamano}
+🎨 Diseño: ${payload.diseno}
+📅 Entrega: ${payload.fechaEntrega}
+📍 Ubicación: ${payload.ubicacion}
+
+📝 Detalles:
+${payload.detalles}
+
+Gracias 🙌
+`;
+
+const encoded = encodeURIComponent(waMessage);
+window.open(`https://wa.me/${WA_NUMBER}?text=${encoded}`, "_blank");
+
           // Éxito
           if(successMsg){
             successMsg.innerHTML = `
