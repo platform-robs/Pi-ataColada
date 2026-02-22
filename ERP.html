@@ -9,6 +9,43 @@
 
 <style>
 
+
+   .card{
+text-align:center;
+}
+
+.card p{
+margin:8px 0;
+}
+
+.card-buttons{
+justify-content:center;
+}
+
+h3{
+text-align:center;
+}
+
+button{
+cursor:pointer;
+border:none;
+border-radius:999px;
+padding:8px 14px;
+font-weight:700;
+transition:.2s;
+}
+
+button:hover{
+transform:translateY(-2px);
+opacity:.9;
+}
+
+/* colores */
+.btn-edit{ background:#17a2b8; color:white; }
+.btn-delete{ background:#dc3545; color:white; }
+.btn-primary{ background:#28a745; color:white; }
+.btn-ticket{ background:#6f42c1; color:white; }
+   
 /* ===============================
    BASE
 ================================ */
@@ -25,14 +62,6 @@ color:white;
 }
 
 .container{ padding:30px; }
-
-button{
-cursor:pointer;
-border:none;
-border-radius:999px;
-padding:8px 14px;
-font-weight:700;
-}
 
 /* ===============================
    NAV
@@ -117,7 +146,7 @@ font-weight:800;
 .popup-overlay{
 position:fixed;
 inset:0;
-background:rgba(0,0,0,.8);
+background:rgba(0,0,0,.6);
 display:flex;
 justify-content:center;
 align-items:center;
@@ -125,15 +154,34 @@ z-index:999;
 }
 
 .popup{
-background:#1b1b22;
-border:1px solid rgba(255,255,255,.10);
+background:#f8f9fa;
+color:#222;
 width:95%;
-max-width:700px;
+max-width:750px;
 max-height:90vh;
 overflow-y:auto;
 border-radius:20px;
-padding:25px;
-box-shadow:0 30px 80px rgba(0,0,0,.6);
+padding:30px;
+box-shadow:0 30px 80px rgba(0,0,0,.4);
+text-align:center;
+}
+
+.popup h2{
+margin-top:0;
+}
+
+.popup input,
+.popup select{
+width:100%;
+padding:10px;
+margin:8px 0;
+border-radius:12px;
+border:1px solid #ccc;
+text-align:center;
+}
+
+.popup button{
+margin-top:15px;
 }
 
 .close-btn{
@@ -221,12 +269,13 @@ const relacionados=tickets.filter(t=>t.Folio===c.Folio);
 let botonesTickets="";
 
 if(relacionados.length>0){
-relacionados.forEach((t,i)=>{
-botonesTickets+=`
-<button onclick="verTicket(${t.rowIndex})">
-Ver Ticket ${String.fromCharCode(65+i)}
-</button>`;
-});
+  relacionados.forEach((t,i)=>{
+    botonesTickets += `
+      <button class="btn-ticket" onclick="verTicket(${t.rowIndex})">
+        Ver Ticket ${String.fromCharCode(65+i)}
+      </button>
+    `;
+  });
 }
 
 lista.innerHTML+=`
@@ -242,16 +291,32 @@ ${c.Precio ? "$"+c.Precio : `
 `}
 </p>
 
-<p><strong>Estatus:</strong><br>
-<span class="badge badge-${(c.Estatus||"Pendiente").replace(/\s+/g,"")}">
-${c.Estatus||"Pendiente"}
-</span>
-</p>
+<div style="margin-top:10px;text-align:center;">
+<strong>Estatus</strong><br><br>
+
+<select onchange="cambiarEstatus(${c.rowIndex},this.value)"
+style="
+padding:8px 12px;
+border-radius:20px;
+border:none;
+font-weight:700;
+text-align:center;
+">
+
+<option ${c.Estatus==="Pendiente"?"selected":""}>Pendiente</option>
+<option ${c.Estatus==="En Desarrollo"?"selected":""}>En Desarrollo</option>
+<option ${c.Estatus==="Aprobada"?"selected":""}>Aprobada</option>
+<option ${c.Estatus==="Entregada"?"selected":""}>Entregada</option>
+<option ${c.Estatus==="Cancelada"?"selected":""}>Cancelada</option>
+
+</select>
+
+</div>
 
 <div class="card-buttons">
-<button onclick="verCotizacion(${c.rowIndex})">Ver / Editar</button>
+<button class="btn-edit" onclick="verCotizacion(${c.rowIndex})">Ver / Editar</button>
 ${botonesTickets}
-<button onclick="eliminarCotizacion('${c.Folio}')">Eliminar</button>
+<button class="btn-delete" onclick="eliminarCotizacion('${c.Folio}')">Eliminar</button>
 </div>
 
 </div>
@@ -334,7 +399,7 @@ let contenido = `
 </select>
 
 <br><br>
-<button onclick="actualizarCotizacionCompleta(${rowIndex})">
+<button class="btn-primary" onclick="actualizarCotizacionCompleta(${rowIndex})">
 Guardar Todo
 </button>
 `;
@@ -395,7 +460,7 @@ let contenido=`
 <p><strong>Anticipo:</strong> $${t.Anticipo}</p>
 <p><strong>Saldo:</strong> $${t.Saldo||0}</p>
 
-<button onclick="cerrarPopup()">Cerrar</button>
+<button class="btn-delete" onclick="cerrarPopup()">Cerrar</button>
 `;
 
 openPopup("Ticket",contenido);
