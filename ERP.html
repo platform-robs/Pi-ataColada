@@ -317,6 +317,9 @@ text-align:center;
 <button class="btn-edit" onclick="verCotizacion(${c.rowIndex})">Ver / Editar</button>
 ${botonesTickets}
 <button class="btn-delete" onclick="eliminarCotizacion('${c.Folio}')">Eliminar</button>
+<button class="btn-primary" onclick="abrirCrearTicket(${c.rowIndex})">
+Crear Ticket
+</button>
 </div>
 
 </div>
@@ -467,6 +470,76 @@ openPopup("Ticket",contenido);
 }
 
 /* ===============================
+   ABRIR/CREAR TICKET
+================================ */
+function abrirCrearTicket(rowIndex){
+
+const c = cotizaciones.find(x=>x.rowIndex===rowIndex);
+if(!c) return;
+
+const precio = parseFloat(c.Precio||0);
+const anticipo = parseFloat(c.Anticipo||0);
+const saldo = precio - anticipo;
+
+let contenido = `
+<p><strong>Folio:</strong> ${c.Folio}</p>
+<p><strong>Precio:</strong> $${precio}</p>
+<p><strong>Anticipo:</strong> $${anticipo}</p>
+<p><strong>Saldo calculado:</strong> $${saldo}</p>
+
+<hr>
+
+<label>Tipo de Ticket</label>
+<select id="tipoTicket">
+<option value="A">Ticket A (Pago parcial)</option>
+<option value="B">Ticket B (Liquidación)</option>
+<option value="Unico">Pago en una sola exhibición</option>
+</select>
+
+<button class="btn-primary" onclick="crearTicket(${rowIndex})">
+Confirmar y Crear
+</button>
+`;
+
+openPopup("Crear Ticket",contenido);
+}
+
+
+/* ===============================
+   CREAR TICKET
+================================ */
+async function crearTicket(rowIndex){
+
+const c = cotizaciones.find(x=>x.rowIndex===rowIndex);
+if(!c) return;
+
+const tipo = document.getElementById("tipoTicket").value;
+
+const precio = parseFloat(c.Precio||0);
+const anticipo = parseFloat(c.Anticipo||0);
+const saldo = precio - anticipo;
+
+await fetch(API,{
+method:"POST",
+body:JSON.stringify({
+action:"crearTicket",
+rowIndex:rowIndex,
+Folio:c.Folio,
+Tipo:tipo,
+Precio:precio,
+Anticipo:anticipo,
+Saldo: saldo,
+Cliente:c.Cliente,
+Evento:c.Evento,
+Estatus:"Activo"
+})
+});
+
+cerrarPopup();
+cargar();
+}
+   
+/* ===============================
    ELIMINAR
 ================================ */
 async function eliminarCotizacion(folio){
@@ -516,6 +589,15 @@ document.querySelector(".popup-overlay")?.remove();
 ================================ */
 cargar();
 
+
+  /* ===============================
+   CONTADOR
+================================ */ 
+function contarPorEstatus(estatus){
+if(estatus==="Todos") return cotizaciones.length;
+return cotizaciones.filter(c=>c.Estatus===estatus).length;
+}
+   
 </script>
 
 </body>
