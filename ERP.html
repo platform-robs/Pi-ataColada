@@ -263,16 +263,49 @@ lista.innerHTML+=`
 
 function editar(row){
 
-const c=cotizaciones.find(x=>x.rowIndex===row);
+const c = cotizaciones.find(x=>x.rowIndex===row);
+if(!c) return;
 
-let html=`
-<h2>Editar Cotización</h2>
+let html = `
+<h2>Editar Cotización Completa</h2>
 
-<input id="Cliente" value="${c.Cliente||''}">
-<input id="Evento" value="${c.Evento||''}">
-<input id="Precio" type="number" value="${c.Precio||0}">
-<input id="Anticipo" type="number" value="${c.Anticipo||0}">
+<label>Folio (No editable)</label>
+<input value="${c.Folio}" disabled>
 
+<label>Fecha de solicitud</label>
+<input id="Fecha_de_solicitud" value="${c["Fecha de solicitud"]||""}">
+
+<label>Cliente</label>
+<input id="Cliente" value="${c.Cliente||""}">
+
+<label>Tamaño</label>
+<input id="Tamaño" value="${c.Tamaño||""}">
+
+<label>Diseño</label>
+<input id="Diseño" value="${c.Diseño||""}">
+
+<label>Fecha de entrega</label>
+<input id="Fecha_de_entrega" value="${c["Fecha de entrega"]||""}">
+
+<label>Evento</label>
+<input id="Evento" value="${c.Evento||""}">
+
+<label>Teléfono</label>
+<input id="Teléfono" value="${c["Teléfono"]||""}">
+
+<label>Detalles</label>
+<input id="Detalles" value="${c.Detalles||""}">
+
+<label>Método de pago</label>
+<input id="Método_de_pago" value="${c["Método de pago"]||""}">
+
+<label>Entrega</label>
+<input id="Entrega" value="${c.Entrega||""}">
+
+<label>Ubicación</label>
+<input id="Ubicación" value="${c.Ubicación||""}">
+
+<label>Estatus</label>
 <select id="Estatus">
 <option ${c.Estatus==="Pendiente"?"selected":""}>Pendiente</option>
 <option ${c.Estatus==="En Desarrollo"?"selected":""}>En Desarrollo</option>
@@ -281,8 +314,16 @@ let html=`
 <option ${c.Estatus==="Cancelada"?"selected":""}>Cancelada</option>
 </select>
 
-<button class="btn-primary" onclick="guardar(${row})">Guardar</button>
-<button class="close-btn" onclick="cerrar()">Cerrar</button>
+<label>Precio</label>
+<input id="Precio" type="number" value="${c.Precio||0}">
+
+<button class="btn-primary" onclick="guardar(${row})">
+Guardar Todo
+</button>
+
+<button class="close-btn" onclick="cerrar()">
+Cerrar
+</button>
 `;
 
 openPopup(html);
@@ -294,17 +335,30 @@ openPopup(html);
 
 async function guardar(row){
 
-await fetch(API,{
-method:"POST",
-body:JSON.stringify({
+const c = cotizaciones.find(x=>x.rowIndex===row);
+if(!c) return;
+
+const campos = {
 action:"updateCotizacion",
 rowIndex:row,
+"Fecha de solicitud":document.getElementById("Fecha_de_solicitud").value,
 Cliente:document.getElementById("Cliente").value,
+Tamaño:document.getElementById("Tamaño").value,
+Diseño:document.getElementById("Diseño").value,
+"Fecha de entrega":document.getElementById("Fecha_de_entrega").value,
 Evento:document.getElementById("Evento").value,
-Precio:document.getElementById("Precio").value,
-Anticipo:document.getElementById("Anticipo").value,
-Estatus:document.getElementById("Estatus").value
-})
+"Teléfono":document.getElementById("Teléfono").value,
+Detalles:document.getElementById("Detalles").value,
+"Método de pago":document.getElementById("Método_de_pago").value,
+Entrega:document.getElementById("Entrega").value,
+Ubicación:document.getElementById("Ubicación").value,
+Estatus:document.getElementById("Estatus").value,
+Precio:document.getElementById("Precio").value
+};
+
+await fetch(API,{
+method:"POST",
+body:JSON.stringify(campos)
 });
 
 cerrar();
