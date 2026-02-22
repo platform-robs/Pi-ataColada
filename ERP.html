@@ -4,193 +4,233 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gestor Piñata Colada</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --pink:#ff4fa6;
-  --yellow:#ffd84d;
-  --bg:#0f0f13;
-  --card:#1b1b22;
-  --text:#ffffff;
+--pink:#ff4fa6;
+--yellow:#ffd84d;
+--bg:#0f0f13;
+--card:#1b1b22;
+--text:#ffffff;
+--muted:#9c9c9c;
 }
 
 *{
-  font-family:'Montserrat',sans-serif;
-  text-align:center;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Montserrat',sans-serif;
+text-align:center;
 }
 
 body{
-  background:var(--bg);
-  color:white;
-  padding:20px;
+background:var(--bg);
+color:white;
+padding:20px 12px 100px;
+}
+
+h1{
+font-size:22px;
+margin-bottom:20px;
+background:linear-gradient(135deg,var(--pink),var(--yellow));
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.counter{
+display:flex;
+justify-content:space-between;
+margin-bottom:20px;
+font-size:12px;
+}
+
+.counter div{
+background:var(--card);
+padding:10px;
+border-radius:14px;
+flex:1;
+margin:0 4px;
 }
 
 .card{
-  background:var(--card);
-  padding:20px;
-  border-radius:20px;
-  margin-bottom:20px;
+background:var(--card);
+padding:18px;
+border-radius:20px;
+margin-bottom:16px;
+box-shadow:0 8px 20px rgba(0,0,0,.4);
 }
 
-input, select{
-  width:100%;
-  padding:10px;
-  margin:5px 0;
-  border-radius:12px;
-  border:none;
+input,select{
+width:100%;
+padding:10px;
+border-radius:12px;
+border:none;
+margin-top:8px;
 }
 
 button{
-  padding:10px 18px;
-  border-radius:30px;
-  border:none;
-  margin-top:8px;
-  font-weight:600;
-  background:linear-gradient(135deg,var(--pink),var(--yellow));
-  color:#000;
+margin-top:10px;
+padding:10px 18px;
+border-radius:30px;
+border:none;
+font-weight:600;
+background:linear-gradient(135deg,var(--pink),var(--yellow));
+color:#000;
 }
+
 .delete{
-  background:#ff3b3b;
-  color:#fff;
+background:#ff3b3b;
+color:white;
 }
 </style>
 </head>
 
 <body>
 
-<h2>Solicitudes de Cotización</h2>
+<h1>Solicitudes</h1>
+
+<div class="counter">
+<div id="cPendiente">Pendiente: 0</div>
+<div id="cDesarrollo">En desarrollo: 0</div>
+<div id="cEntregada">Entregada: 0</div>
+<div id="cCancelada">Cancelada: 0</div>
+</div>
 
 <div id="list"></div>
 
 <script>
 
-const API_URL = "https://script.google.com/macros/s/AKfycbyhpSCLRXjePADfFhr7uM6gV8NU_nbplg2GtuGHUxCqGisULXfHUgf3pwsBc9eyfKPm/exec";
-let cotizaciones = [];
+const API_URL = "https://script.google.com/macros/s/AKfycby5XoViRjN8TD8EG3zA9rNsl8EUpo1M7S9o6espgQYv059CaiZnX_pP3DZRxBFKkaEN/exec";
+
+let cotizaciones=[];
 
 async function cargar(){
-  const res = await fetch(`${API_URL}?action=getCotizaciones`);
-  cotizaciones = await res.json();
-  render();
+const res=await fetch(`${API_URL}?action=getCotizaciones`);
+cotizaciones=await res.json();
+render();
 }
 
 function render(){
-  const list = document.getElementById("list");
-  list.innerHTML="";
 
-  cotizaciones.forEach(c => {
+let p=0,d=0,e=0,c=0;
 
-    const card = document.createElement("div");
-    card.className="card";
+const list=document.getElementById("list");
+list.innerHTML="";
 
-    card.innerHTML = `
-      <h3>${c.Folio}</h3>
-      <p>${c.Cliente}</p>
+cotizaciones.forEach(x=>{
 
-      <select onchange="cambiarEstatus(${c.rowIndex},this.value)">
-        <option ${c.Estatus=="Pendiente"?"selected":""}>Pendiente</option>
-        <option ${c.Estatus=="En desarrollo"?"selected":""}>En desarrollo</option>
-        <option ${c.Estatus=="Entregada"?"selected":""}>Entregada</option>
-        <option ${c.Estatus=="Cancelada"?"selected":""}>Cancelada</option>
-      </select>
+if(x.Estatus=="Pendiente")p++;
+if(x.Estatus=="En desarrollo")d++;
+if(x.Estatus=="Entregada")e++;
+if(x.Estatus=="Cancelada")c++;
 
-      <input type="number" placeholder="Precio"
-      value="${c.Precio || ""}"
-      onchange="guardarDatos(${c.rowIndex})"
-      id="precio${c.rowIndex}">
+const card=document.createElement("div");
+card.className="card";
 
-      <input type="number" placeholder="Anticipo"
-      value="${c.Anticipo || ""}"
-      onchange="guardarDatos(${c.rowIndex})"
-      id="anticipo${c.rowIndex}">
+card.innerHTML=`
+<h3>${x.Folio}</h3>
+<p>${x.Cliente}</p>
 
-      <p>Saldo: ${c.Saldo || 0}</p>
+<select onchange="cambiarEstatus(${x.rowIndex},this.value)">
+<option ${x.Estatus=="Pendiente"?"selected":""}>Pendiente</option>
+<option ${x.Estatus=="En desarrollo"?"selected":""}>En desarrollo</option>
+<option ${x.Estatus=="Entregada"?"selected":""}>Entregada</option>
+<option ${x.Estatus=="Cancelada"?"selected":""}>Cancelada</option>
+</select>
 
-      <button onclick="crearTicket(${c.rowIndex})">
-        Generar / Actualizar Ticket
-      </button>
+<input type="number" placeholder="Precio"
+value="${x.Precio||""}"
+onchange="guardarPrecio(${x.rowIndex})"
+id="precio${x.rowIndex}">
 
-      <button class="delete" onclick="eliminar('${c.Folio}')">
-        Eliminar
-      </button>
-    `;
+<input type="number" placeholder="Anticipo"
+onchange="guardarTicket(${x.rowIndex})"
+id="anticipo${x.rowIndex}">
 
-    list.appendChild(card);
-  });
-}
+<button onclick="guardarTicket(${x.rowIndex})">
+Generar / Actualizar Ticket
+</button>
 
-async function guardarDatos(rowIndex){
-  const precio = parseFloat(document.getElementById(`precio${rowIndex}`).value) || 0;
-  const anticipo = parseFloat(document.getElementById(`anticipo${rowIndex}`).value) || 0;
+<button class="delete" onclick="eliminar('${x.Folio}')">
+Eliminar
+</button>
+`;
 
-  await fetch(API_URL,{
-    method:"POST",
-    body:JSON.stringify({
-      action:"updateCotizacion",
-      rowIndex,
-      estatus:"En desarrollo",
-      precio,
-      anticipo
-    })
-  });
+list.appendChild(card);
 
-  cargar();
+});
+
+document.getElementById("cPendiente").innerText=`Pendiente: ${p}`;
+document.getElementById("cDesarrollo").innerText=`En desarrollo: ${d}`;
+document.getElementById("cEntregada").innerText=`Entregada: ${e}`;
+document.getElementById("cCancelada").innerText=`Cancelada: ${c}`;
+
 }
 
 async function cambiarEstatus(rowIndex,estatus){
-  await fetch(API_URL,{
-    method:"POST",
-    body:JSON.stringify({
-      action:"updateCotizacion",
-      rowIndex,
-      estatus,
-      precio:0,
-      anticipo:0
-    })
-  });
-
-  cargar();
+await fetch(API_URL,{
+method:"POST",
+body:JSON.stringify({
+action:"updateCotizacion",
+rowIndex,
+estatus,
+precio:document.getElementById(`precio${rowIndex}`).value||0
+})
+});
+cargar();
 }
 
-async function crearTicket(rowIndex){
+async function guardarPrecio(rowIndex){
+await cambiarEstatus(rowIndex,"En desarrollo");
+}
 
-  const c = cotizaciones.find(x => x.rowIndex == rowIndex);
+async function guardarTicket(rowIndex){
 
-  if(!c.Precio || c.Estatus=="Pendiente"){
-    alert("Primero define precio y aprueba la cotización");
-    return;
-  }
+const x=cotizaciones.find(c=>c.rowIndex==rowIndex);
 
-  await fetch(API_URL,{
-    method:"POST",
-    body:JSON.stringify({
-      action:"saveTicket",
-      folio:c.Folio,
-      cliente:c.Cliente,
-      telefono:c.Telefono,
-      producto:c.Producto,
-      fechaEntrega:c.FechaEntrega,
-      precio:c.Precio,
-      anticipo:c.Anticipo,
-      estatus:c.Estatus
-    })
-  });
+if(!x.Precio){
+alert("Define primero el precio");
+return;
+}
 
-  alert("Ticket generado");
+const anticipo=parseFloat(document.getElementById(`anticipo${rowIndex}`).value)||0;
+
+await fetch(API_URL,{
+method:"POST",
+body:JSON.stringify({
+action:"saveTicket",
+folio:x.Folio,
+fechaSolicitud:x["Fecha de solicitud"],
+cliente:x.Cliente,
+tamano:x.Tamaño,
+diseno:x.Diseño,
+fechaEntrega:x["Fecha de entrega"],
+evento:x.Evento,
+telefono:x["Teléfono"],
+metodoPago:x["Método de pago"],
+entrega:x.Entrega,
+precio:x.Precio,
+anticipo
+})
+});
+
+alert("Ticket guardado");
 }
 
 async function eliminar(folio){
-  if(!confirm("¿Eliminar cotización y ticket vinculado?")) return;
+if(!confirm("¿Eliminar cotización y ticket vinculado?"))return;
 
-  await fetch(API_URL,{
-    method:"POST",
-    body:JSON.stringify({
-      action:"deleteCotizacion",
-      folio
-    })
-  });
+await fetch(API_URL,{
+method:"POST",
+body:JSON.stringify({
+action:"deleteCotizacion",
+folio
+})
+});
 
-  cargar();
+cargar();
 }
 
 cargar();
