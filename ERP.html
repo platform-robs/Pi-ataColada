@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Panel Piñata Colada</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
@@ -27,45 +26,64 @@ font-family:'Montserrat',sans-serif;
 body{
 background:var(--bg);
 color:white;
-padding:20px;
+padding:30px 15px;
+display:flex;
+justify-content:center;
+}
+
+.container{
+width:100%;
+max-width:900px;
 }
 
 h1{
 text-align:center;
 font-weight:800;
-margin-bottom:20px;
+margin-bottom:25px;
 background:linear-gradient(135deg,var(--pink),var(--yellow));
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 }
 
-.topbar{
-display:flex;
-overflow:auto;
-gap:8px;
-margin-bottom:20px;
+.filtroBox{
+text-align:center;
+margin-bottom:25px;
 }
 
-.badge{
-background:var(--card);
-padding:10px 14px;
+select{
+padding:10px 18px;
 border-radius:30px;
-font-size:12px;
-white-space:nowrap;
-cursor:pointer;
+border:none;
+font-weight:600;
+background:var(--card);
+color:white;
+min-width:220px;
+text-align:center;
 }
 
 .card{
 background:var(--card);
-padding:18px;
+padding:20px;
 border-radius:20px;
-margin-bottom:16px;
+margin-bottom:20px;
+text-align:center;
+box-shadow:0 0 20px rgba(0,0,0,0.4);
+}
+
+.card h3{
+margin-bottom:5px;
+font-weight:700;
+}
+
+.card p{
+color:var(--muted);
+margin-bottom:10px;
 }
 
 button{
 margin-top:8px;
 margin-right:6px;
-padding:8px 14px;
+padding:8px 16px;
 border-radius:30px;
 border:none;
 font-weight:600;
@@ -79,29 +97,49 @@ background:#ff3b3b;
 color:white;
 }
 
-input,select{
+input{
 width:100%;
-margin-top:6px;
+margin-top:10px;
 padding:8px;
 border-radius:12px;
 border:none;
+text-align:center;
 }
+
 .ticketBox{
-margin-top:8px;
+margin-top:10px;
 background:#111;
-padding:8px;
-border-radius:10px;
-font-size:12px;
+padding:10px;
+border-radius:12px;
+font-size:13px;
+}
+
+@media(max-width:600px){
+.card{
+padding:15px;
+}
+button{
+width:100%;
+margin-top:8px;
+}
 }
 </style>
 </head>
 
 <body>
 
+<div class="container">
+
 <h1>Panel Cotizaciones</h1>
 
-<div class="topbar" id="filtros"></div>
+<div class="filtroBox">
+<select id="filtroSelect" onchange="cambiarFiltro(this.value)">
+</select>
+</div>
+
 <div id="lista"></div>
+
+</div>
 
 <script>
 
@@ -112,15 +150,18 @@ let tickets=[];
 let filtroActual="Todos";
 
 async function cargar(){
+try{
 const res=await fetch(`${API_URL}?action=getAll`);
 const data=await res.json();
-cotizaciones=data.cotizaciones;
-tickets=data.tickets;
+cotizaciones=data.cotizaciones||[];
+tickets=data.tickets||[];
 render();
+}catch(e){
+document.body.innerHTML="<h2 style='color:white;text-align:center'>Error conectando con API</h2>";
+}
 }
 
 function render(){
-
 renderFiltros();
 
 const lista=document.getElementById("lista");
@@ -158,7 +199,6 @@ ${puedeCrear ? `<button onclick="crearTicket('${c.Folio}')">Nuevo Ticket</button
 <button onclick="verTickets('${c.Folio}')">Ver Tickets</button>
 
 ${relacionados.map((t,i)=>{
-
 const textoAnticipo=
 Number(t["Saldo pendiente"])===0
 ? "Pago"
@@ -171,7 +211,6 @@ ${textoAnticipo}: ${t.Anticipo} —
 Saldo: ${t["Saldo pendiente"]}
 </div>
 `;
-
 }).join("")}
 
 <button class="delete" onclick="eliminar('${c.Folio}')">Eliminar</button>
@@ -180,11 +219,9 @@ Saldo: ${t["Saldo pendiente"]}
 lista.appendChild(card);
 
 });
-
 }
 
 function renderFiltros(){
-
 const estados=["Todos","Pendiente","En Desarrollo","Aprobadas","Entregada","Cancelada"];
 const contadores={};
 estados.forEach(e=>contadores[e]=0);
@@ -195,16 +232,22 @@ if(contadores[c.Estatus]!==undefined)
 contadores[c.Estatus]++;
 });
 
-const div=document.getElementById("filtros");
-div.innerHTML="";
+const select=document.getElementById("filtroSelect");
+select.innerHTML="";
 
 estados.forEach(e=>{
-const el=document.createElement("div");
-el.className="badge";
-el.innerText=`${e} (${contadores[e]||0})`;
-el.onclick=()=>{filtroActual=e;render();}
-div.appendChild(el);
+const option=document.createElement("option");
+option.value=e;
+option.textContent=`${e} (${contadores[e]||0})`;
+select.appendChild(option);
 });
+
+select.value=filtroActual;
+}
+
+function cambiarFiltro(valor){
+filtroActual=valor;
+render();
 }
 
 async function updateCot(rowIndex,estatus){
@@ -242,38 +285,18 @@ return;
 
 let montoTotal=Number(c.Precio);
 
-// Ticket A
 if(relacionados.length===0){
-
-const tipo=prompt("1 = Anticipo\n2 = Pago completo");
-if(!tipo) return;
-
-let anticipo=0;
-
-if(tipo==="1"){
-anticipo=Number(prompt("Monto del anticipo:"));
-if(!anticipo) return;
-}
-
-if(tipo==="2"){
-anticipo=montoTotal;
-}
-
+let anticipo=Number(prompt("Monto anticipo (0 si es pago completo):"));
+if(anticipo===null) return;
 await guardarTicketBackend(c,anticipo,montoTotal);
 alert("Ticket A generado");
-}
-
-// Ticket B
-else{
-
+}else{
 const ticketA=relacionados[0];
 const saldoPendiente=Number(ticketA["Saldo pendiente"]);
-
 if(saldoPendiente<=0){
 alert("Ya está liquidado");
 return;
 }
-
 await guardarTicketBackend(c,saldoPendiente,saldoPendiente);
 alert("Ticket B generado");
 }
@@ -295,17 +318,7 @@ Precio:Number(precio)
 
 function verCotizacion(folio){
 const c=cotizaciones.find(x=>x.Folio===folio);
-alert(`
-Folio: ${c.Folio}
-Cliente: ${c.Cliente}
-Tamaño: ${c.Tamaño}
-Diseño: ${c.Diseño}
-Evento: ${c.Evento}
-Entrega: ${c["Fecha de entrega"]}
-Teléfono: ${c["Teléfono"]}
-Precio: ${c.Precio}
-Estatus: ${c.Estatus}
-`);
+alert(JSON.stringify(c,null,2));
 }
 
 function verTickets(folio){
@@ -314,16 +327,7 @@ if(relacionados.length===0){
 alert("Sin tickets");
 return;
 }
-let texto="";
-relacionados.forEach((t,i)=>{
-texto+=`
-Ticket ${String.fromCharCode(65+i)}
-Anticipo: ${t.Anticipo}
-Saldo: ${t["Saldo pendiente"]}
-
-`;
-});
-alert(texto);
+alert(JSON.stringify(relacionados,null,2));
 }
 
 async function eliminar(folio){
