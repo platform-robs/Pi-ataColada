@@ -280,25 +280,66 @@ Precio:Number(precio)
 }
 
 function verCotizacion(folio){
-const c=cotizaciones.find(x=>x.Folio===folio);
-openPopup("Cotización "+folio,Object.entries(c).map(([k,v])=>`<p><strong>${k}:</strong> ${v}</p>`).join(""));
+
+const c = cotizaciones.find(x => x.Folio === folio);
+if(!c) return;
+
+const html = `
+<p><strong>Folio:</strong> ${c.Folio}</p>
+<p><strong>Fecha de solicitud:</strong> ${c["Fecha de solicitud"] || "-"}</p>
+<p><strong>Cliente:</strong> ${c.Cliente || "-"}</p>
+<p><strong>Tamaño:</strong> ${c.Tamaño || "-"}</p>
+<p><strong>Diseño:</strong> ${c.Diseño || "-"}</p>
+<p><strong>Fecha de entrega:</strong> ${c["Fecha de entrega"] || "-"}</p>
+<p><strong>Evento:</strong> ${c.Evento || "-"}</p>
+<p><strong>Teléfono:</strong> ${c["Teléfono"] || "-"}</p>
+<p><strong>Método de pago:</strong> ${c["Método de pago"] || "-"}</p>
+<p><strong>Entrega:</strong> ${c.Entrega || "-"}</p>
+<hr>
+<p><strong>Precio:</strong> $${c.Precio || 0}</p>
+<p><strong>Estatus:</strong> ${c.Estatus}</p>
+`;
+
+openPopup("Cotización " + folio, html);
 }
 
 function verTickets(folio){
-const relacionados=tickets.filter(t=>t.Folio===folio);
-if(relacionados.length===0){
-openPopup("Tickets","<p>Sin tickets</p>");
+
+const relacionados = tickets.filter(t => t.Folio === folio);
+
+if(relacionados.length === 0){
+openPopup("Tickets " + folio, "<p>Sin tickets generados</p>");
 return;
 }
 
-openPopup("Tickets "+folio,
-relacionados.map((t,i)=>`
+const html = relacionados.map((t,i)=>{
+
+return `
+<div style="margin-bottom:20px;padding:15px;background:#111;border-radius:15px;">
+<h3 style="margin-bottom:10px;">Ticket ${String.fromCharCode(65+i)}</h3>
+
+<p><strong>Folio:</strong> ${t.Folio}</p>
+<p><strong>Cliente:</strong> ${t.Cliente}</p>
+<p><strong>Tamaño:</strong> ${t.Tamaño}</p>
+<p><strong>Diseño:</strong> ${t.Diseño}</p>
+<p><strong>Fecha de entrega:</strong> ${t["Fecha de entrega"]}</p>
+<p><strong>Evento:</strong> ${t.Evento}</p>
+<p><strong>Teléfono:</strong> ${t["Teléfono"]}</p>
+<p><strong>Método de pago:</strong> ${t["Método de pago"]}</p>
+<p><strong>Entrega:</strong> ${t.Entrega}</p>
+
 <hr>
-<p><strong>Ticket ${String.fromCharCode(65+i)}</strong></p>
-<p>Anticipo: ${t.Anticipo}</p>
-<p>Saldo pendiente: ${t["Saldo pendiente"]}</p>
-`).join("")
-);
+
+<p><strong>Precio del ticket:</strong> $${t.Precio}</p>
+<p><strong>Anticipo:</strong> $${t.Anticipo}</p>
+<p><strong>Saldo pendiente:</strong> $${t["Saldo pendiente"]}</p>
+
+</div>
+`;
+
+}).join("");
+
+openPopup("Tickets " + folio, html);
 }
 
 function openPopup(title,content){
