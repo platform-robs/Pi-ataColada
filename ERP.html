@@ -125,7 +125,7 @@ z-index:999;
 }
 
 .popup{
-background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+background:#1b1b22;
 border:1px solid rgba(255,255,255,.10);
 width:95%;
 max-width:700px;
@@ -133,6 +133,7 @@ max-height:90vh;
 overflow-y:auto;
 border-radius:20px;
 padding:25px;
+box-shadow:0 30px 80px rgba(0,0,0,.6);
 }
 
 .close-btn{
@@ -284,7 +285,10 @@ cargar();
 ================================ */
 async function guardarPrecio(rowIndex){
 
-const precio=document.getElementById("precio-"+rowIndex).value;
+const input=document.getElementById("precio-"+rowIndex);
+if(!input) return;
+
+const precio=input.value;
 
 await fetch(API,{
 method:"POST",
