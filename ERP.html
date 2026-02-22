@@ -33,7 +33,7 @@ justify-content:center;
 
 .container{
 width:100%;
-max-width:900px;
+max-width:950px;
 }
 
 h1{
@@ -45,17 +45,40 @@ background:linear-gradient(135deg,var(--pink),var(--yellow));
 -webkit-text-fill-color:transparent;
 }
 
+/* FILTRO */
+.filtro{
+margin-bottom:25px;
+text-align:center;
+}
+
+select{
+padding:10px 18px;
+border-radius:30px;
+border:none;
+background:var(--card);
+color:white;
+font-weight:600;
+}
+
+/* CARD */
 .card{
 background:var(--card);
 padding:20px;
 border-radius:20px;
 margin-bottom:20px;
-text-align:center;
 box-shadow:0 0 20px rgba(0,0,0,0.4);
 }
 
+.card h3{
+margin-bottom:5px;
+}
+
+.card small{
+color:var(--muted);
+}
+
 button{
-margin-top:8px;
+margin-top:10px;
 margin-right:6px;
 padding:8px 16px;
 border-radius:30px;
@@ -71,28 +94,19 @@ background:#ff3b3b;
 color:white;
 }
 
-input, select{
+input{
 width:100%;
 margin-top:10px;
 padding:8px;
 border-radius:12px;
 border:none;
-text-align:center;
-}
-
-.ticketBox{
-margin-top:10px;
-background:#111;
-padding:10px;
-border-radius:12px;
-font-size:13px;
 }
 
 /* POPUP */
 .popup{
 position:fixed;
 inset:0;
-background:rgba(0,0,0,.8);
+background:rgba(0,0,0,.85);
 display:none;
 align-items:center;
 justify-content:center;
@@ -105,28 +119,38 @@ display:flex;
 
 .popup-card{
 background:#1a1a2e;
-width:90%;
-max-width:600px;
+width:95%;
+max-width:650px;
 padding:30px;
-border-radius:20px;
-overflow:auto;
+border-radius:25px;
 max-height:90vh;
+overflow:auto;
 }
 
 .popup-card h2{
-margin-bottom:15px;
+margin-bottom:20px;
 background:linear-gradient(135deg,var(--pink),var(--yellow));
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 }
 
+.popup-section{
+margin-bottom:18px;
+padding-bottom:10px;
+border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+.popup-section p{
+margin:6px 0;
+}
+
 .close-btn{
 background:none;
-color:white;
 border:none;
-font-size:22px;
-cursor:pointer;
+color:white;
+font-size:24px;
 float:right;
+cursor:pointer;
 }
 </style>
 </head>
@@ -135,6 +159,18 @@ float:right;
 
 <div class="container">
 <h1>Panel Cotizaciones</h1>
+
+<div class="filtro">
+<select id="filtro" onchange="render()">
+<option value="Todos">Todos</option>
+<option value="Pendiente">Pendiente</option>
+<option value="En Desarrollo">En Desarrollo</option>
+<option value="Aprobadas">Aprobadas</option>
+<option value="Entregada">Entregada</option>
+<option value="Cancelada">Cancelada</option>
+</select>
+</div>
+
 <div id="lista"></div>
 </div>
 
@@ -161,24 +197,32 @@ cotizaciones=data.cotizaciones||[];
 tickets=data.tickets||[];
 render();
 }catch(e){
-document.body.innerHTML="<h2 style='text-align:center'>Error conectando con API</h2>";
+alert("Error conectando con API");
 }
 }
 
 function render(){
+
+const filtro=document.getElementById("filtro").value;
 const lista=document.getElementById("lista");
 lista.innerHTML="";
 
-cotizaciones.forEach(c=>{
+cotizaciones
+.filter(c=>filtro==="Todos" || c.Estatus===filtro)
+.forEach(c=>{
 
 const relacionados=tickets.filter(t=>t.Folio===c.Folio);
+const saldoTotal=relacionados.length>0 ? Number(relacionados[relacionados.length-1]["Saldo pendiente"]) : Number(c.Precio||0);
 
 const card=document.createElement("div");
 card.className="card";
 
 card.innerHTML=`
 <h3>${c.Folio}</h3>
-<p>${c.Cliente}</p>
+<small>${c.Cliente}</small>
+
+<p><strong>Precio:</strong> $${c.Precio||0}</p>
+<p><strong>Saldo actual:</strong> $${saldoTotal}</p>
 
 <select onchange="updateEstatus(${c.rowIndex},this.value)">
 <option ${c.Estatus==="Pendiente"?"selected":""}>Pendiente</option>
@@ -188,23 +232,14 @@ card.innerHTML=`
 <option ${c.Estatus==="Cancelada"?"selected":""}>Cancelada</option>
 </select>
 
-<input type="number"
-placeholder="Precio"
-value="${c.Precio||""}"
+<input type="number" value="${c.Precio||""}" placeholder="Actualizar precio"
 onchange="guardarPrecio(${c.rowIndex},this.value)">
 
+<br>
 <button onclick="crearTicket('${c.Folio}')">Nuevo Ticket</button>
-<button onclick="verCotizacion('${c.Folio}')">Ver Cotización</button>
-<button onclick="verTickets('${c.Folio}')">Ver Tickets</button>
-
-${relacionados.map((t,i)=>`
-<div class="ticketBox">
-Ticket ${String.fromCharCode(65+i)} —
-Anticipo: ${t.Anticipo} —
-Saldo pendiente: ${t["Saldo pendiente"]}
-</div>
-`).join("")}
-
+<button onclick="verCotizacion('${c.Folio}')">Ver</button>
+<button onclick="editarCotizacion('${c.Folio}')">Editar</button>
+<button onclick="verTickets('${c.Folio}')">Tickets</button>
 <button class="delete" onclick="eliminar('${c.Folio}')">Eliminar</button>
 `;
 
@@ -213,133 +248,148 @@ lista.appendChild(card);
 });
 }
 
-async function updateEstatus(rowIndex,estatus){
-await fetch(API_URL,{
-method:"POST",
-body:JSON.stringify({
-action:"updateCotizacion",
-rowIndex,
-Estatus:estatus
-})
-});
-cargar();
-}
-
-async function guardarPrecio(rowIndex,precio){
-
-const cot=cotizaciones.find(c=>c.rowIndex===rowIndex);
-if(cot) cot.Precio=precio;
-
-await fetch(API_URL,{
-method:"POST",
-body:JSON.stringify({
-action:"updateCotizacion",
-rowIndex,
-Precio:precio
-})
-});
-}
-
+/* CREAR TICKET */
 async function crearTicket(folio){
 
 const c=cotizaciones.find(x=>x.Folio===folio);
-
 if(!c || Number(c.Precio)<=0){
 alert("Define precio válido primero");
 return;
 }
 
 const relacionados=tickets.filter(t=>t.Folio===folio);
+let saldoActual=Number(c.Precio);
 
-if(relacionados.length===0){
-let anticipo=Number(prompt("Monto anticipo (0 si es pago completo):"));
-if(isNaN(anticipo)) return;
-await guardarTicket(c,anticipo,c.Precio);
-}else{
-const saldo=Number(relacionados[0]["Saldo pendiente"]);
-if(saldo<=0){
-alert("Ya está liquidado");
+if(relacionados.length>0){
+saldoActual=Number(relacionados[relacionados.length-1]["Saldo pendiente"]);
+}
+
+if(saldoActual<=0){
+alert("Ya está liquidado. No se pueden generar más tickets.");
 return;
 }
-await guardarTicket(c,saldo,saldo);
+
+let anticipo=Number(prompt(`Saldo disponible: $${saldoActual}\nIngresa monto a pagar:`));
+if(isNaN(anticipo) || anticipo<=0) return;
+
+if(anticipo>saldoActual){
+alert("No puede exceder el saldo.");
+return;
 }
 
-cargar();
-}
-
-async function guardarTicket(c,anticipo,precio){
 await fetch(API_URL,{
 method:"POST",
 body:JSON.stringify({
 action:"saveTicket",
 ...c,
-Anticipo:Number(anticipo),
-Precio:Number(precio)
+Anticipo:anticipo,
+Precio:saldoActual
 })
 });
+
+cargar();
 }
 
+/* POPUPS ORDENADOS */
+
 function verCotizacion(folio){
+const c=cotizaciones.find(x=>x.Folio===folio);
 
-const c = cotizaciones.find(x => x.Folio === folio);
-if(!c) return;
+openPopup("Cotización "+folio,`
+<div class="popup-section">
+<p><strong>Cliente:</strong> ${c.Cliente}</p>
+<p><strong>Tamaño:</strong> ${c.Tamaño}</p>
+<p><strong>Diseño:</strong> ${c.Diseño}</p>
+<p><strong>Evento:</strong> ${c.Evento}</p>
+<p><strong>Entrega:</strong> ${c.Entrega}</p>
+</div>
 
-const html = `
-<p><strong>Folio:</strong> ${c.Folio}</p>
-<p><strong>Fecha de solicitud:</strong> ${c["Fecha de solicitud"] || "-"}</p>
-<p><strong>Cliente:</strong> ${c.Cliente || "-"}</p>
-<p><strong>Tamaño:</strong> ${c.Tamaño || "-"}</p>
-<p><strong>Diseño:</strong> ${c.Diseño || "-"}</p>
-<p><strong>Fecha de entrega:</strong> ${c["Fecha de entrega"] || "-"}</p>
-<p><strong>Evento:</strong> ${c.Evento || "-"}</p>
-<p><strong>Teléfono:</strong> ${c["Teléfono"] || "-"}</p>
-<p><strong>Método de pago:</strong> ${c["Método de pago"] || "-"}</p>
-<p><strong>Entrega:</strong> ${c.Entrega || "-"}</p>
-<hr>
-<p><strong>Precio:</strong> $${c.Precio || 0}</p>
+<div class="popup-section">
+<p><strong>Precio:</strong> $${c.Precio}</p>
 <p><strong>Estatus:</strong> ${c.Estatus}</p>
-`;
-
-openPopup("Cotización " + folio, html);
+</div>
+`);
 }
 
 function verTickets(folio){
+const relacionados=tickets.filter(t=>t.Folio===folio);
 
-const relacionados = tickets.filter(t => t.Folio === folio);
-
-if(relacionados.length === 0){
-openPopup("Tickets " + folio, "<p>Sin tickets generados</p>");
+if(relacionados.length===0){
+openPopup("Tickets","Sin tickets");
 return;
 }
 
-const html = relacionados.map((t,i)=>{
-
-return `
-<div style="margin-bottom:20px;padding:15px;background:#111;border-radius:15px;">
-<h3 style="margin-bottom:10px;">Ticket ${String.fromCharCode(65+i)}</h3>
-
-<p><strong>Folio:</strong> ${t.Folio}</p>
-<p><strong>Cliente:</strong> ${t.Cliente}</p>
-<p><strong>Tamaño:</strong> ${t.Tamaño}</p>
-<p><strong>Diseño:</strong> ${t.Diseño}</p>
-<p><strong>Fecha de entrega:</strong> ${t["Fecha de entrega"]}</p>
-<p><strong>Evento:</strong> ${t.Evento}</p>
-<p><strong>Teléfono:</strong> ${t["Teléfono"]}</p>
-<p><strong>Método de pago:</strong> ${t["Método de pago"]}</p>
-<p><strong>Entrega:</strong> ${t.Entrega}</p>
-
-<hr>
-
-<p><strong>Precio del ticket:</strong> $${t.Precio}</p>
+openPopup("Tickets "+folio,
+relacionados.map((t,i)=>`
+<div class="popup-section">
+<h3>Ticket ${String.fromCharCode(65+i)}</h3>
 <p><strong>Anticipo:</strong> $${t.Anticipo}</p>
 <p><strong>Saldo pendiente:</strong> $${t["Saldo pendiente"]}</p>
-
+<button onclick="editarTicket(${t.rowIndex})">Editar Ticket</button>
 </div>
-`;
+`).join("")
+);
+}
 
-}).join("");
+/* EDICIONES */
 
-openPopup("Tickets " + folio, html);
+function editarCotizacion(folio){
+const c=cotizaciones.find(x=>x.Folio===folio);
+
+openPopup("Editar Cotización",
+`<form onsubmit="guardarEdicionCot(event,${c.rowIndex})">
+<input name="Cliente" value="${c.Cliente}">
+<input name="Tamaño" value="${c.Tamaño}">
+<input name="Diseño" value="${c.Diseño}">
+<input name="Evento" value="${c.Evento}">
+<input name="Entrega" value="${c.Entrega}">
+<input name="Precio" type="number" value="${c.Precio}">
+<br><button type="submit">Guardar</button>
+</form>`);
+}
+
+async function guardarEdicionCot(e,rowIndex){
+e.preventDefault();
+const datos=Object.fromEntries(new FormData(e.target).entries());
+await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"updateCotizacion",rowIndex,...datos})});
+closePopup();
+cargar();
+}
+
+function editarTicket(rowIndex){
+const t=tickets.find(x=>x.rowIndex===rowIndex);
+
+openPopup("Editar Ticket",
+`<form onsubmit="guardarEdicionTicket(event,${rowIndex})">
+<input name="Anticipo" type="number" value="${t.Anticipo}">
+<input name="Precio" type="number" value="${t.Precio}">
+<input name="Saldo pendiente" type="number" value="${t["Saldo pendiente"]}">
+<br><button type="submit">Guardar</button>
+</form>`);
+}
+
+async function guardarEdicionTicket(e,rowIndex){
+e.preventDefault();
+const datos=Object.fromEntries(new FormData(e.target).entries());
+await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"updateCotizacion",rowIndex,...datos})});
+closePopup();
+cargar();
+}
+
+async function updateEstatus(rowIndex,estatus){
+await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"updateCotizacion",rowIndex,Estatus:estatus})});
+cargar();
+}
+
+async function guardarPrecio(rowIndex,precio){
+await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"updateCotizacion",rowIndex,Precio:precio})});
+cargar();
+}
+
+async function eliminar(folio){
+if(!confirm("Eliminar cotización y tickets?"))return;
+await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"deleteCotizacion",folio})});
+cargar();
 }
 
 function openPopup(title,content){
@@ -352,20 +402,7 @@ function closePopup(){
 document.getElementById("popup").classList.remove("active");
 }
 
-async function eliminar(folio){
-if(!confirm("Eliminar cotización y tickets?"))return;
-await fetch(API_URL,{
-method:"POST",
-body:JSON.stringify({
-action:"deleteCotizacion",
-folio
-})
-});
 cargar();
-}
-
-cargar();
-
 </script>
 
 </body>
