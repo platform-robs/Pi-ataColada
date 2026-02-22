@@ -1,273 +1,238 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base target="_top">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Piñata Colada</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
 
-  <style>
-    body{
-      margin:0;
-      font-family:'Montserrat',sans-serif;
-      background:#0f0f0f;
-      color:white;
-    }
+<style>
+body{
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+  background:#f4f6f9;
+}
 
-    header{
-      padding:18px;
-      font-weight:900;
-      font-size:18px;
-      text-align:center;
-      background:linear-gradient(135deg,#ff4fa6,#ffd84f);
-      color:black;
-    }
+header{
+  padding:18px;
+  text-align:center;
+  font-weight:900;
+  background:linear-gradient(135deg,#ff4fa6,#ffd84f);
+}
 
-    .tabs{
-      display:flex;
-      position:fixed;
-      bottom:0;
-      width:100%;
-      background:#1c1c1c;
-      border-top:1px solid #222;
-    }
+.container{
+  padding:15px;
+}
 
-    .tab{
-      flex:1;
-      text-align:center;
-      padding:14px;
-      font-weight:700;
-      cursor:pointer;
-    }
+.filters{
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  margin-bottom:15px;
+}
 
-    .tab.active{
-      background:#ffd84f;
-      color:black;
-    }
+.filter{
+  padding:8px 14px;
+  border-radius:20px;
+  background:#e0e0e0;
+  font-size:13px;
+  cursor:pointer;
+  white-space:nowrap;
+}
 
-    .view{
-      display:none;
-      padding:15px;
-      padding-bottom:80px;
-    }
+.filter.active{
+  background:#111;
+  color:white;
+}
 
-    .view.active{
-      display:block;
-    }
+.card{
+  background:white;
+  padding:15px;
+  border-radius:16px;
+  margin-bottom:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
 
-    .card{
-      background:#1f1f1f;
-      padding:14px;
-      border-radius:14px;
-      margin-bottom:12px;
-      font-size:14px;
-      cursor:pointer;
-    }
+.badge{
+  padding:4px 8px;
+  border-radius:10px;
+  font-size:11px;
+  font-weight:700;
+}
 
-    .card b{
-      font-size:15px;
-    }
+.pendiente{background:#ffe082;}
+.desarrollo{background:#64b5f6;color:white;}
+.finalizada{background:#81c784;}
 
-    input{
-      width:100%;
-      padding:12px;
-      margin-bottom:12px;
-      border-radius:10px;
-      border:none;
-      font-size:14px;
-    }
+.btn{
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  font-weight:700;
+  width:100%;
+  cursor:pointer;
+}
 
-    .btn{
-      width:100%;
-      padding:14px;
-      border-radius:12px;
-      border:none;
-      font-weight:900;
-      font-size:14px;
-      margin-bottom:12px;
-      cursor:pointer;
-    }
+.btn-primary{
+  background:#111;
+  color:white;
+}
 
-    .btn-primary{
-      background:#ffd84f;
-      color:black;
-    }
+.editor{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  top:0;
+  background:white;
+  padding:20px;
+  overflow:auto;
+  transform:translateY(100%);
+  transition:.3s;
+}
 
-    .btn-secondary{
-      background:#333;
-      color:white;
-    }
+.editor.active{
+  transform:translateY(0);
+}
 
-    .ticket-preview{
-      background:white;
-      color:black;
-      padding:20px;
-      border-radius:12px;
-      font-size:13px;
-      margin-top:10px;
-      box-shadow:0 0 20px rgba(0,0,0,.5);
-    }
+input{
+  width:100%;
+  padding:12px;
+  margin-bottom:12px;
+  border-radius:10px;
+  border:1px solid #ddd;
+}
 
-    .ticket-title{
-      text-align:center;
-      font-weight:900;
-      margin-bottom:10px;
-      font-size:16px;
-    }
-
-  </style>
+.ticket-preview{
+  background:#fafafa;
+  padding:15px;
+  border-radius:12px;
+  font-size:13px;
+  margin-top:10px;
+}
+</style>
 </head>
+
 <body>
 
 <header>PIÑATA COLADA — ADMIN</header>
 
-<!-- =========================
-     VISTA COTIZACIONES
-========================= -->
+<div class="container">
 
-<div class="view active" id="cotizacionesView">
-  <h3>Cotizaciones</h3>
-  <div id="cotizaciones"></div>
+<div class="filters">
+  <div class="filter active" onclick="filtrar('Todos',this)">Todos</div>
+  <div class="filter" onclick="filtrar('Pendiente',this)">Pendiente</div>
+  <div class="filter" onclick="filtrar('En desarrollo',this)">En desarrollo</div>
+  <div class="filter" onclick="filtrar('Finalizada',this)">Finalizada</div>
 </div>
 
-<!-- =========================
-     VISTA TICKETS
-========================= -->
-
-<div class="view" id="ticketsView">
-  <h3>Tickets</h3>
-  <div id="tickets"></div>
-</div>
-
-<!-- =========================
-     VISTA EDITOR
-========================= -->
-
-<div class="view" id="editorView">
-  <h3>Editor Ticket</h3>
-
-  <button class="btn btn-secondary" onclick="nuevoTicket()">Nuevo Ticket</button>
-
-  <input id="folio" placeholder="Folio">
-  <input id="cliente" placeholder="Cliente">
-  <input id="tamano" placeholder="Tamaño">
-  <input id="diseno" placeholder="Diseño">
-  <input id="fechaEntrega" placeholder="Fecha de entrega">
-  <input id="telefono" placeholder="Teléfono">
-  <input id="precio" placeholder="Precio cotizado">
-  <input id="anticipo" placeholder="Anticipo">
-  <input id="saldo" placeholder="Saldo pendiente">
-
-  <button class="btn btn-primary" onclick="guardar()">Guardar Ticket</button>
-
-  <div class="ticket-preview" id="preview"></div>
+<div id="lista"></div>
 
 </div>
 
-<!-- =========================
-     TABS
-========================= -->
+<div class="editor" id="editor">
+<h3 id="editorTitle"></h3>
 
-<div class="tabs">
-  <div class="tab active" onclick="cambiarVista('cotizacionesView',this)">Cotizaciones</div>
-  <div class="tab" onclick="cambiarVista('ticketsView',this)">Tickets</div>
-  <div class="tab" onclick="cambiarVista('editorView',this)">Editor</div>
+<input id="folio">
+<input id="cliente">
+<input id="tamano">
+<input id="diseno">
+<input id="fechaEntrega">
+<input id="telefono">
+<input id="precio">
+<input id="anticipo">
+<input id="saldo">
+
+<button class="btn btn-primary" onclick="guardarTicket()">Guardar Ticket</button>
+<button class="btn" onclick="cerrarEditor()">Cerrar</button>
+
+<div class="ticket-preview" id="preview"></div>
+
 </div>
-
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <script>
 
+const API = "https://script.google.com/macros/s/AKfycby9azbxx0xid0RWKh7Cp_D-4fjTQJBcSZSZHvK2cvmU2CIoov4mvELuS_WOLR8vA0VY/exec";
+
 let cotizaciones = [];
 let tickets = [];
+let filtroActual = "Todos";
 
-/* =========================
-   CAMBIO DE VISTA
-========================= */
+/* ================= */
 
-function cambiarVista(id,el){
-  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  el.classList.add("active");
+async function cargarDatos(){
+  cotizaciones = await fetch(API+"?action=cotizaciones").then(r=>r.json());
+  tickets = await fetch(API+"?action=tickets").then(r=>r.json());
+  render();
 }
 
-/* =========================
-   CARGAR DATA
-========================= */
+function render(){
+  const lista = document.getElementById("lista");
+  lista.innerHTML="";
 
-google.script.run.withSuccessHandler(data=>{
-  cotizaciones = data;
-  renderCotizaciones();
-}).obtenerCotizaciones();
+  cotizaciones
+    .filter(c=> filtroActual==="Todos" || c.Estatus===filtroActual)
+    .forEach(c=>{
 
-google.script.run.withSuccessHandler(data=>{
-  tickets = data;
-  renderTickets();
-}).obtenerTickets();
+      const ticketExiste = tickets.find(t=>t.Folio===c.Folio);
 
-/* =========================
-   RENDER
-========================= */
-
-function renderCotizaciones(){
-  const container = document.getElementById("cotizaciones");
-  container.innerHTML="";
-  cotizaciones.forEach(c=>{
-    container.innerHTML+=`
-      <div class="card" onclick='cargarDesdeCotizacion(${JSON.stringify(c)}); cambiarVista("editorView", document.querySelectorAll(".tab")[2]);'>
+      lista.innerHTML+=`
+      <div class="card">
         <b>${c.Folio}</b><br>
         ${c.Cliente}<br>
-        ${c.Estatus || ""}
-      </div>
-    `;
-  });
+        <span class="badge ${colorClase(c.Estatus)}">${c.Estatus}</span>
+
+        <button class="btn btn-primary"
+        onclick='abrirEditor(${JSON.stringify(c)}, ${JSON.stringify(ticketExiste||null)})'>
+        ${ticketExiste ? "Ver / Editar Ticket" : "Crear Ticket"}
+        </button>
+      </div>`;
+    });
 }
 
-function renderTickets(){
-  const container=document.getElementById("tickets");
-  container.innerHTML="";
-  tickets.forEach(t=>{
-    container.innerHTML+=`
-      <div class="card" onclick='cargarTicket(${JSON.stringify(t)}); cambiarVista("editorView", document.querySelectorAll(".tab")[2]);'>
-        <b>${t.Folio}</b><br>
-        ${t.Cliente}
-      </div>
-    `;
-  });
+function colorClase(status){
+  if(status==="Pendiente") return "pendiente";
+  if(status==="En desarrollo") return "desarrollo";
+  if(status==="Finalizada") return "finalizada";
+  return "";
 }
 
-/* =========================
-   ACCIONES
-========================= */
+function filtrar(estatus,el){
+  filtroActual=estatus;
+  document.querySelectorAll(".filter").forEach(f=>f.classList.remove("active"));
+  el.classList.add("active");
+  render();
+}
 
-function cargarDesdeCotizacion(c){
+function abrirEditor(c,t){
+
+  document.getElementById("editor").classList.add("active");
+  document.getElementById("editorTitle").innerText=c.Folio;
+
   folio.value=c.Folio;
   cliente.value=c.Cliente;
   tamano.value=c.Tamaño;
   diseno.value=c.Diseño;
   fechaEntrega.value=c["Fecha de entrega"];
   telefono.value=c.Teléfono;
+
+  if(t){
+    precio.value=t["Precio cotizado"];
+    anticipo.value=t.Anticipo;
+    saldo.value=t["Saldo pendiente"];
+  } else {
+    precio.value="";
+    anticipo.value="";
+    saldo.value="";
+  }
+
   actualizarPreview();
 }
 
-function cargarTicket(t){
-  folio.value=t.Folio;
-  cliente.value=t.Cliente;
-  tamano.value=t.Tamaño;
-  diseno.value=t.Diseño;
-  fechaEntrega.value=t["Fecha de entrega"];
-  telefono.value=t.Teléfono;
-  precio.value=t["Precio cotizado"];
-  anticipo.value=t.Anticipo;
-  saldo.value=t["Saldo pendiente"];
-  actualizarPreview();
-}
-
-function nuevoTicket(){
-  document.querySelectorAll("input").forEach(i=>i.value="");
-  actualizarPreview();
+function cerrarEditor(){
+  document.getElementById("editor").classList.remove("active");
 }
 
 document.querySelectorAll("input").forEach(i=>{
@@ -276,20 +241,16 @@ document.querySelectorAll("input").forEach(i=>{
 
 function actualizarPreview(){
   preview.innerHTML=`
-    <div class="ticket-title">PIÑATA COLADA</div>
-    Folio: ${folio.value}<br>
-    Cliente: ${cliente.value}<br>
-    Tamaño: ${tamano.value}<br>
-    Diseño: ${diseno.value}<br>
-    Entrega: ${fechaEntrega.value}<br>
-    Tel: ${telefono.value}<br>
-    Precio: $${precio.value}<br>
-    Anticipo: $${anticipo.value}<br>
-    Saldo: $${saldo.value}
+  <b>PIÑATA COLADA</b><br>
+  Folio: ${folio.value}<br>
+  Cliente: ${cliente.value}<br>
+  Precio: $${precio.value}<br>
+  Anticipo: $${anticipo.value}<br>
+  Saldo: $${saldo.value}
   `;
 }
 
-function guardar(){
+async function guardarTicket(){
 
   const ticket={
     folio:folio.value,
@@ -307,15 +268,20 @@ function guardar(){
     entrega:""
   };
 
-  google.script.run.guardarTicket(ticket);
-
-  html2canvas(document.getElementById("preview")).then(canvas=>{
-    const base64=canvas.toDataURL("image/png");
-    google.script.run.guardarTicketImagen(base64,ticket.folio);
+  await fetch(API,{
+    method:"POST",
+    body:JSON.stringify({
+      action:"guardarTicket",
+      ticket:ticket
+    })
   });
 
-  alert("Ticket guardado correctamente");
+  alert("Ticket guardado");
+  cerrarEditor();
+  cargarDatos();
 }
+
+cargarDatos();
 
 </script>
 
