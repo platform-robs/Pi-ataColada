@@ -15,7 +15,11 @@
 body{
 margin:0;
 font-family:'Montserrat',sans-serif;
-background:#0f0f14;
+background:
+  radial-gradient(1000px 600px at 15% 10%, rgba(255,79,166,.20), transparent 55%),
+  radial-gradient(900px 600px at 90% 20%, rgba(255,213,74,.18), transparent 55%),
+  radial-gradient(900px 600px at 55% 100%, rgba(60,255,192,.10), transparent 60%),
+  #0b0b0f;
 color:white;
 }
 
@@ -58,8 +62,11 @@ gap:10px;
 }
 
 .admin-links button{
-background:none;
-color:white;
+  background: rgba(255,255,255,.05);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight:700;
+  transition:.2s;
 }
 
 .admin-links button:hover{
@@ -88,6 +95,18 @@ border-radius:20px;
 .admin-menu-btn{display:block;}
 }
 
+   .admin-mobile-menu button{
+  background: rgba(255,255,255,.05);
+  color:white;
+  border-radius:999px;
+  padding:10px 14px;
+  font-weight:700;
+  transition:.2s;
+}
+
+.admin-mobile-menu button:hover{
+  background: rgba(255,255,255,.10);
+}
 /* ===============================
    CONTENIDO
 ================================ */
@@ -96,7 +115,8 @@ padding:30px;
 }
 
 .card{
-background:#1c1c25;
+background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+border: 1px solid rgba(255,255,255,.08);
 padding:20px;
 border-radius:20px;
 margin-bottom:20px;
@@ -114,11 +134,12 @@ font-size:12px;
 font-weight:700;
 }
 
-.badge.Pendiente{background:#ffc107;color:black;}
-.badge["En Desarrollo"]{background:#17a2b8;}
-.badge.Aprobadas{background:#28a745;}
-.badge.Entregada{background:#6f42c1;}
-.badge.Cancelada{background:#dc3545;}
+
+.badge-Pendiente{ background:#ffc107; color:black; }
+.badge-EnDesarrollo{ background:#17a2b8; }
+.badge-Aprobadas{ background:#28a745; }
+.badge-Entregada{ background:#6f42c1; }
+.badge-Cancelada{ background:#dc3545; }
 
 .card-buttons{
 display:flex;
@@ -144,7 +165,8 @@ z-index:999;
 }
 
 .popup{
-background:#1b1b22;
+background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+border: 1px solid rgba(255,255,255,.10);
 width:95%;
 max-width:700px;
 max-height:90vh;
@@ -196,6 +218,12 @@ font-size:12px;
 opacity:.7;
 margin-top:5px;
 }
+
+   .status-Pendiente{ border:1px solid #ffc107; }
+.status-EnDesarrollo{ border:1px solid #17a2b8; }
+.status-Aprobadas{ border:1px solid #28a745; }
+.status-Entregada{ border:1px solid #6f42c1; }
+.status-Cancelada{ border:1px solid #dc3545; }
 
 </style>
 </head>
@@ -268,8 +296,13 @@ menu.style.display=menu.style.display==="flex"?"none":"flex";
 }
 
 function setFiltro(valor){
-filtroActual=valor;
-render();
+  filtroActual = valor;
+
+  // Cerrar menú móvil si está abierto
+  const menu = document.getElementById("adminMobileMenu");
+  menu.style.display = "none";
+
+  render();
 }
 
 /* ===============================
@@ -314,7 +347,7 @@ lista.innerHTML+=`
 <p><strong>Evento:</strong> ${c.Evento}</p>
 <p><strong>Entrega:</strong> ${formatFecha(c["Fecha de entrega"])}</p>
 <p><strong>Precio:</strong> $${c.Precio||0}</p>
-<p><strong>Estatus:</strong> <span class="badge ${c.Estatus}">${c.Estatus}</span></p>
+<p><strong>Estatus:</strong> <span class="badge badge-${c.Estatus.replace(/\s/g,'')}">${c.Estatus}</span></p>
 
 <div class="card-buttons">
 <button onclick="verCotizacion('${c.Folio}')">Ver Cotización</button>
@@ -333,9 +366,16 @@ function openPopup(titulo,contenido){
 document.body.insertAdjacentHTML("beforeend",`
 <div class="popup-overlay" onclick="cerrarPopup(event)">
 <div class="popup" onclick="event.stopPropagation()">
+
+<div style="text-align:center;margin-bottom:15px;">
+  <img src="URL_DE_TU_LOGO" 
+       style="max-height:60px;">
+</div>
+
 <button class="close-btn" onclick="cerrarPopup()">Cerrar</button>
 <h2>${titulo}</h2>
 ${contenido}
+
 </div>
 </div>
 `);
