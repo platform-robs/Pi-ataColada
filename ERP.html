@@ -206,19 +206,70 @@ margin-bottom:15px;
 <div class="container">
 
 <header class="admin-nav">
-  <div style="font-weight:900;">Panel — Piñata Colada</div>
+  <div style="font-weight:900;">
+    Panel — Piñata Colada
+  </div>
 
   <nav class="admin-links">
-    <button onclick="setFiltro('Todos')">Todos</button>
-    <button onclick="setFiltro('Pendiente')">Pendiente</button>
-    <button onclick="setFiltro('En Desarrollo')">En Desarrollo</button>
-    <button onclick="setFiltro('Aprobada')">Aprobada</button>
-    <button onclick="setFiltro('Entregada')">Entregada</button>
-    <button onclick="setFiltro('Cancelada')">Cancelada</button>
+
+    <button onclick="setFiltro('Todos')">
+      Todos (<span id="count-Todos">0</span>)
+    </button>
+
+    <button onclick="setFiltro('Pendiente')">
+      Pendiente (<span id="count-Pendiente">0</span>)
+    </button>
+
+    <button onclick="setFiltro('En Desarrollo')">
+      En Desarrollo (<span id="count-En Desarrollo">0</span>)
+    </button>
+
+    <button onclick="setFiltro('Aprobada')">
+      Aprobada (<span id="count-Aprobada">0</span>)
+    </button>
+
+    <button onclick="setFiltro('Entregada')">
+      Entregada (<span id="count-Entregada">0</span>)
+    </button>
+
+    <button onclick="setFiltro('Cancelada')">
+      Cancelada (<span id="count-Cancelada">0</span>)
+    </button>
+
   </nav>
 
-  <button class="admin-menu-btn" onclick="toggleAdminMenu()">☰</button>
+  <button class="admin-menu-btn" onclick="toggleAdminMenu()">
+    ☰
+  </button>
 </header>
+
+<div class="admin-mobile-menu" id="adminMobileMenu">
+
+  <button onclick="setFiltro('Todos')">
+    Todos (<span id="countM-Todos">0</span>)
+  </button>
+
+  <button onclick="setFiltro('Pendiente')">
+    Pendiente (<span id="countM-Pendiente">0</span>)
+  </button>
+
+  <button onclick="setFiltro('En Desarrollo')">
+    En Desarrollo (<span id="countM-En Desarrollo">0</span>)
+  </button>
+
+  <button onclick="setFiltro('Aprobada')">
+    Aprobada (<span id="countM-Aprobada">0</span>)
+  </button>
+
+  <button onclick="setFiltro('Entregada')">
+    Entregada (<span id="countM-Entregada">0</span>)
+  </button>
+
+  <button onclick="setFiltro('Cancelada')">
+    Cancelada (<span id="countM-Cancelada">0</span>)
+  </button>
+
+</div>
 
 <div class="admin-mobile-menu" id="adminMobileMenu">
   <button onclick="setFiltro('Todos')">Todos</button>
@@ -448,6 +499,23 @@ function toggleAdminMenu(){
   menu.style.display = menu.style.display === "flex" ? "none" : "flex";
 }   
 
+   function actualizarContadores(){
+
+const estatuses = ["Pendiente","En Desarrollo","Aprobada","Entregada","Cancelada"];
+
+document.getElementById("count-Todos").innerText = cotizaciones.length;
+document.getElementById("countM-Todos").innerText = cotizaciones.length;
+
+estatuses.forEach(e=>{
+
+  const cantidad = cotizaciones.filter(c=>c.Estatus===e).length;
+
+  document.getElementById("count-"+e).innerText = cantidad;
+  document.getElementById("countM-"+e).innerText = cantidad;
+
+});
+
+}
    
 /* ===============================
    VER TICKET
@@ -587,7 +655,16 @@ document.querySelector(".popup-overlay")?.remove();
 /* ===============================
    INICIAR
 ================================ */
-cargar();
+async function cargar(){
+  const res = await fetch(API+"?action=getAll");
+  const data = await res.json();
+
+  cotizaciones = data.cotizaciones || [];
+  tickets = data.tickets || [];
+
+  render();
+  actualizarContadores(); // 🔥 IMPORTANTE
+}
 
 
   /* ===============================
